@@ -1,22 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const authState = useSelector((state) => state.auth);
 
   const signUpSchema = yup.object({
-    firstname: yup.string().required("firstname is required"),
-    lastname: yup.string().required("lastname is required"),
-    email: yup.string().nullable().required("email should be valid"),
-    mobile: yup.number().required("mobile is required"),
-    password: yup.string().required("password is required"),
+    firstname: yup.string().required("Tên là trường bắt buộc "),
+    lastname: yup.string().required("Họ là trường bắt buộc "),
+    email: yup.string().nullable().required("email là trường bắt buộc "),
+    mobile: yup.number().required("số điện thoại là trường bắt buộc "),
+    password: yup.string().required("mật khẩu là trường bắt buộc"),
   });
 
   const formik = useFormik({
@@ -28,8 +31,13 @@ const Signup = () => {
       password: "",
     },
     validationSchema: signUpSchema,
-    onSubmit: (values) => {
-      dispatch(registerUser(values));
+    onSubmit: async (values) => {
+      try {
+        await dispatch(registerUser(values));
+        navigate("/login");
+      } catch (error) {
+        console.log("Error registering user: ", error);
+      }
     },
   });
 
@@ -67,7 +75,7 @@ const Signup = () => {
                   onChange={formik.handleChange("lastname")}
                   onBlur={formik.handleBlur("lastname")}
                 />
-                <div classlastName="error">
+                <div className="error">
                   {formik.touched.lastname && formik.errors.lastname}
                 </div>
 

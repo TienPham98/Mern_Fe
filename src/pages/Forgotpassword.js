@@ -1,10 +1,35 @@
 import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { forgotPWToken } from "../features/user/userSlice";
+
 const Forgotpassword = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const emailSchema = yup.object({
+    email: yup
+      .string()
+      .email("email phải hợp lệ")
+      .required("email phải bắt buộc"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+    },
+    validationSchema: emailSchema,
+    onSubmit: (values) => {
+      dispatch(forgotPWToken(values));
+    },
+  });
+
   return (
     <>
       <Meta title={"Quên mật khẩu"} />
@@ -17,8 +42,21 @@ const Forgotpassword = () => {
               <p className="text-center mt-2 mb-3">
                 Chúng tôi sẽ gửi mật khẩu tới email của bạn
               </p>
-              <form action="" className="d-flex flex-column gap-15">
-                <CustomInput type="email" name="email" placeholder="Email" />
+              <form
+                onSubmit={formik.handleSubmit}
+                className="d-flex flex-column gap-15"
+              >
+                <CustomInput
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange("email")}
+                  onBlur={formik.handleBlur("email")}
+                />
+                <div className="error">
+                  {formik.touched.email && formik.errors.email}
+                </div>
 
                 <div>
                   <div className="mt-3 d-flex justify-content-center flex-column gap-15 align-items-center">

@@ -1,13 +1,86 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import ReactPaginate from "react-paginate";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import ReactStars from "react-rating-stars-component";
 import ProductCard from "../components/ProductCard";
 import Color from "../components/Color";
 import Container from "../components/Container";
+import {
+  getAllProducts,
+  getProductCategories,
+} from "../features/products/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import RandomProducts from "../components/RandomProduct";
+import { Link } from "react-router-dom";
 
 const OurStore = () => {
+  const dispatch = useDispatch();
+  const productState = useSelector((state) => state?.product?.products);
   const [grid, setGrid] = useState(4);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
+
+  // filter State
+  const [tag, setTag] = useState(null);
+  const [brand, setBrand] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [sort, setSort] = useState(null);
+
+  useEffect(() => {
+    let newBrands = [];
+    let category = [];
+    let newTags = [];
+    for (let index = 0; index < productState.length; index++) {
+      const element = productState[index];
+      newBrands.push(element.brand);
+      category.push(element.category);
+      newTags.push(element.tags);
+    }
+    setBrands(newBrands);
+    setCategories(category);
+    setTags(newTags);
+  }, [productState]);
+
+  useEffect(() => {
+    getProducts();
+  }, [sort, tag, category, brand, minPrice, maxPrice]);
+  const getProducts = () => {
+    dispatch(
+      getAllProducts({ sort, tag, category, brand, minPrice, maxPrice })
+    );
+  };
+
+  const handleCategoryClick = (item) => {
+    setSelectedCategory((prevCategory) =>
+      prevCategory === item ? null : item
+    );
+    setCategory((prevCategory) => (prevCategory === item ? null : item));
+  };
+
+  const handleBrandClick = (item) => {
+    setSelectedBrand((prevBrand) => (prevBrand === item ? null : item));
+    setBrand((prevBrand) => (prevBrand === item ? null : item));
+  };
+
+  const handleTagClick = (item) => {
+    setSelectedTags((prevTags) => {
+      if (prevTags.includes(item)) {
+        return prevTags.filter((tag) => tag !== item);
+      } else {
+        return [...prevTags, item];
+      }
+    });
+
+    setTag((prevTag) => (prevTag === item ? null : item));
+  };
+
   return (
     <>
       <Meta title={"Sản phẩm"} />
@@ -16,13 +89,19 @@ const OurStore = () => {
         <div className="row">
           <div className="col-3">
             <div className="filter-card mb-3">
-              <h3 className="filter-title">Danh sách sản phẩm</h3>
+              <h3 className="filter-title ">Phân loại sản phẩm</h3>
               <div>
-                <ul className="ps-0">
-                  <li>Watch</li>
-                  <li>Tv</li>
-                  <li>Camera</li>
-                  <li>Laptop</li>
+                <ul className="ps-0 text-dark mx-1">
+                  {categories &&
+                    [...new Set(categories)].map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleCategoryClick(item)}
+                        className={selectedCategory === item ? "active" : ""}
+                      >
+                        {item}
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
@@ -32,29 +111,65 @@ const OurStore = () => {
                 <h5 className="sub-title">Số lượng </h5>
                 <div>
                   <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
-                    <label className="form-check-label" htmlFor="">
-                      Còn hàng (1)
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id=""
-                    />
-                    <label className="form-check-label" htmlFor="">
-                      Hết hàng (0)
-                    </label>
+                    <div>
+                      <h5 className="ps-0 sub-title text-success mx-1">
+                        Còn hàng (
+                        {
+                          productState?.filter(
+                            (product) => product.quantity > 0
+                          )?.length
+                        }
+                        )
+                      </h5>
+                      <ul className="ps-3 text-dark mx-1">
+                        {productState
+                          ?.filter((product) => product.quantity > 0)
+                          ?.map((product) => (
+                            <li className="text-dark" key={product._id}>
+                              <Link
+                                className="text-dark"
+                                to={`/product/${product._id}`}
+                              >
+                                <p>
+                                  <strong>{product.title}</strong>&nbsp;(
+                                  {product.quantity})
+                                </p>
+                              </Link>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="sub-title text-danger">
+                        Hết hàng (
+                        {
+                          productState?.filter(
+                            (product) => product.quantity === 0
+                          )?.length
+                        }
+                        )
+                      </h5>
+                      <ul>
+                        {productState
+                          ?.filter((product) => product.quantity === 0)
+                          ?.map((product) => (
+                            <li className="text-dark" key={product._id}>
+                              <Link
+                                className="text-dark"
+                                to={`/product/${product._id}`}
+                              >
+                                <p>
+                                  <strong>{product.title}</strong>&nbsp;(
+                                  {product.quantity})
+                                </p>
+                              </Link>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-                <h5 className="sub-title">Giá</h5>
+                {/* <h5 className="sub-title">Giá</h5>
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floating">
                     <input
@@ -74,12 +189,12 @@ const OurStore = () => {
                     />
                     <label htmlFor="floatingInput1">Đến</label>
                   </div>
-                </div>
-                <h5 className="sub-title">Màu sắc</h5>
+                </div> */}
+                {/* <h5 className="sub-title">Màu sắc</h5>
                 <div>
                   <Color />
-                </div>
-                <h5 className="sub-title">Kích thước</h5>
+                </div> */}
+                {/* <h5 className="sub-title">Kích thước</h5>
                 <div>
                   <div className="form-check">
                     <input
@@ -103,71 +218,51 @@ const OurStore = () => {
                       M (2)
                     </label>
                   </div>
-                </div>
+                </div> */}
+              </div>
+            </div>
+            <div className="filter-card mb-3">
+              <h3 className="filter-title">Thương hiệu </h3>
+              <div>
+                <ul className="product-tags ps-0 text-dark mx-1">
+                  {brands &&
+                    [...new Set(brands)].map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleBrandClick(item)}
+                        className={selectedBrand === item ? "active" : ""}
+                      >
+                        {item}
+                      </li>
+                    ))}
+                </ul>
               </div>
             </div>
             <div className="filter-card mb-3">
               <h3 className="filter-title">Tags</h3>
               <div>
-                <div className="product-tags d-flex flex-wrap align-items-center gap-10">
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Headphone
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Laptop
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Mobile
-                  </span>
-                  <span className="badge bg-light text-secondary rounded-3 py-2 px-3">
-                    Wire
-                  </span>
-                </div>
+                <ul className="product-tags ps-0 text-dark mx-1">
+                  {tags &&
+                    [...new Set(tags)].map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => handleTagClick(item)}
+                        className={`text-capitalize badge bg-light text-dark mx-2 ${
+                          selectedTags && selectedTags.includes(item)
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        {item}
+                      </li>
+                    ))}
+                </ul>
               </div>
             </div>
             <div className="filter-card mb-3">
               <h3 className="filter-title">Sản phẩm gợi ý</h3>
-              <div>
-                <div className="random-products mb-3 d-flex">
-                  <div className="w-50">
-                    <img
-                      src="images/watch.jpg"
-                      className="img-fluid"
-                      alt="watch"
-                    />
-                  </div>
-                  <div className="w-50">
-                    <h5>Đồng hồ thông minh</h5>
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={4}
-                      edit={false}
-                      activeColor="#ffd700"
-                    />
-                    <b> 3.000.000 đ</b>
-                  </div>
-                </div>
-                <div className="random-products d-flex">
-                  <div className="w-50">
-                    <img
-                      src="images/watch.jpg"
-                      className="img-fluid"
-                      alt="watch"
-                    />
-                  </div>
-                  <div className="w-50">
-                    <h5>Đồng hồ thông minh cho trẻ</h5>
-                    <ReactStars
-                      count={5}
-                      size={24}
-                      value={4}
-                      edit={false}
-                      activeColor="#ffd700"
-                    />
-                    <b>3.000.000 đ</b>
-                  </div>
-                </div>
+              <div className="random-products mb-3 d-flex">
+                <RandomProducts products={productState} amount={2} />
               </div>
             </div>
           </div>
@@ -180,22 +275,24 @@ const OurStore = () => {
                   </p>
                   <select
                     name=""
-                    defaultValue={"manula"}
+                    defaultValue={"manual"}
                     className="form-control form-select"
                     id=""
+                    onChange={(e) => setSort(e.target.value)}
                   >
                     <option value="manual">Tính năng</option>
-                    <option value="best-selling">Bán chạy</option>
-                    <option value="title-ascending">Từ A-Z</option>
-                    <option value="title-descending">Từ Z-A</option>
-                    <option value="price-ascending">Giá thấp đến cao</option>
-                    <option value="price-descending">Giá cao xuống thấp</option>
-                    <option value="created-ascending">Mới nhất</option>
-                    <option value="created-descending">Cũ nhất</option>
+                    <option value="title">Từ A-Z</option>
+                    <option value="-title">Từ Z-A</option>
+                    <option value="price">Giá thấp đến cao</option>
+                    <option value="-price">Giá cao xuống thấp</option>
+                    <option value="createdAt">Mới nhất</option>
+                    <option value="-createdAt">Cũ nhất</option>
                   </select>
                 </div>
                 <div className="d-flex align-items-center gap-10">
-                  <p className="totalproducts mb-0">21 Sản phẩm</p>
+                  <p className="totalproducts mb-0">
+                    {productState?.length} Sản phẩm
+                  </p>
                   <div className="d-flex gap-10 align-items-center grid">
                     <img
                       onClick={() => {
@@ -236,7 +333,7 @@ const OurStore = () => {
             </div>
             <div className="products-list pb-5">
               <div className="d-flex gap-10 flex-wrap">
-                <ProductCard grid={grid} />
+                <ProductCard grid={grid} data={productState} amount={16} />
               </div>
             </div>
           </div>

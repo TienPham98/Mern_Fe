@@ -1,23 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllBlogs } from "../features/blogs/blogSlice";
+import moment from "moment";
 
-const BlogCard = () => {
+const BlogCard = (props) => {
+  const { blogs = [], amount } = props;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllBlogs());
+  }, [dispatch]);
+
+  if (!Array.isArray(blogs)) {
+    return <div>Loading...</div>;
+  }
+
+  if (blogs.length === 0) {
+    return <div>No data found</div>;
+  }
+
+  const list = blogs.filter((_, i) => i < amount);
+
   return (
-    <div className="blog-card">
-      <div className="card-image">
-        <img src="images/blog-1.jpg" className="img-fluid w-100" alt="blog" />
-      </div>
-      <div className="blog-content">
-        <p className="date">1 Dec, 2022</p>
-        <h5 className="title">Công nghệ kính thực tế ảo</h5>
-        <p className="desc">
-          Mới đây một công nghệ mới ra mắt đã khiến cho cộng đồng công nghệ bàn
-          tán sôi nổi về nó
-        </p>
-        <Link to="/blog/:id" className="button">
-          Đọc thêm
-        </Link>
-      </div>
+    <div className="blog-card-container">
+      {list.map((blog) => (
+        <div key={blog._id} className="blog-card">
+          <div className="blog-card-wrapper">
+            <div className="blog-card-img">
+              <img
+                src={blog.images[0].url}
+                className="img-fluid w-100"
+                alt={blog.title}
+              />
+            </div>
+            <div className="blog-content">
+              <p className="date">
+                {moment(blog.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+              </p>
+              <h5 className="title">{blog.title}</h5>
+              <p className="desc">{blog.description}</p>
+              <Link to={`/blog/${blog.id}`} className="button">
+                Đọc thêm
+              </Link>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

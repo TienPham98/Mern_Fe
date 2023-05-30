@@ -1,12 +1,3 @@
 {
-  "cSpell.words": [
-    "chất",
-    "Freeship",
-    "hàng",
-    "Hàng",
-    "lượng",
-    "trên",
-    "triệu",
-    "xách"
-  ]
+    "editor.formatOnSave": true
 }
