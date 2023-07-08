@@ -1,14 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const base_url = "http://localhost:5000/api/";
+export const base_url = "https://hoaleauth.onrender.com/api/";
 
 const getTokenFromsessionStorage = sessionStorage.getItem("customer")
   ? JSON.parse(sessionStorage.getItem("customer"))
   : null;
 
 const instance = axios.create({
-  baseURL: "http://localhost:5000/api/",
+  baseURL: "https://hoaleauth.onrender.com/api/",
   headers: {
     Accept: "application/json",
   },
