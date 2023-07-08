@@ -1,13 +1,13 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
-import { useFormik } from "formik";
+import {useFormik} from "formik";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../features/user/userSlice";
-import { useNavigate } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {registerUser} from "../features/user/userSlice";
+import {Link, useNavigate} from "react-router-dom";
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -46,8 +46,8 @@ const Signup = () => {
       <Meta title={"Đăng kí"} />
       <BreadCrumb title="Đăng kí" />
       <Container class1="login-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
+        <div className="row d-flex justify-content-center">
+          <div className="col-12 col-lg-6">
             <div className="auth-card">
               <h3 className="text-center mb-3">Đăng ký</h3>
               <form
@@ -63,7 +63,7 @@ const Signup = () => {
                   onChange={formik.handleChange("firstname")}
                   onBlur={formik.handleBlur("firstname")}
                 />
-                <div className="error">
+                <div className="error my-2">
                   {formik.touched.firstname && formik.errors.firstname}
                 </div>
 
@@ -75,7 +75,7 @@ const Signup = () => {
                   onChange={formik.handleChange("lastname")}
                   onBlur={formik.handleBlur("lastname")}
                 />
-                <div className="error">
+                <div className="error my-2">
                   {formik.touched.lastname && formik.errors.lastname}
                 </div>
 
@@ -87,7 +87,7 @@ const Signup = () => {
                   onChange={formik.handleChange("email")}
                   onBlur={formik.handleBlur("email")}
                 />
-                <div className="error">
+                <div className="error my-2">
                   {formik.touched.email && formik.errors.email}
                 </div>
 
@@ -99,7 +99,7 @@ const Signup = () => {
                   onChange={formik.handleChange("mobile")}
                   onBlur={formik.handleBlur("mobile")}
                 />
-                <div className="error">
+                <div className="error my-2">
                   {formik.touched.mobile && formik.errors.mobile}
                 </div>
 
@@ -111,13 +111,13 @@ const Signup = () => {
                   onChange={formik.handleChange("password")}
                   onBlur={formik.handleBlur("password")}
                 />
-                <div className="error">
+                <div className="error my-2">
                   {formik.touched.password && formik.errors.password}
                 </div>
 
                 <div>
                   <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="button border-0">Đăng ký</button>
+                    <button className="login-btn ">Đăng ký</button>
                   </div>
                 </div>
               </form>

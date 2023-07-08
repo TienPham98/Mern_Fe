@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
-import { useFormik } from "formik";
+import {useFormik} from "formik";
 import * as yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/user/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {loginUser} from "../features/user/userSlice";
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
 
   const loginSchema = yup.object({
-    email: yup.string().nullable().required("email should be valid"),
-    password: yup.string().required("password is required"),
+    email: yup.string().nullable().required("Email không hợp lệ"),
+    password: yup.string().required("Mật khẩu không hợp lệ"),
   });
 
   const formik = useFormik({
@@ -41,8 +41,8 @@ const Login = () => {
       <BreadCrumb title="Đăng nhập" />
 
       <Container class1="login-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
+        <div className="row d-flex justify-content-center">
+          <div className=" col-12 col-lg-6">
             <div className="auth-card">
               <h3 className="text-center mb-3">Đăng nhập</h3>
               <form
@@ -58,7 +58,7 @@ const Login = () => {
                   onChange={formik.handleChange("email")}
                   onBlur={formik.handleBlur("email")}
                 />
-                <div className="error">
+                <div className="error text-white my-3 mx-3">
                   {formik.touched.email && formik.errors.email}
                 </div>
 
@@ -70,20 +70,19 @@ const Login = () => {
                   onChange={formik.handleChange("password")}
                   onBlur={formik.handleBlur("password")}
                 />
-                <div className="error">
+                <div className="error  text-white mt-3 mx-3">
                   {formik.touched.password && formik.errors.password}
                 </div>
 
-                <div>
-                  <Link to="/forgot-password">Quên mật khẩu?</Link>
-
-                  <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="primary-button border-0" type="submit">
+                <div className="mt-1">
+                  <div className="d-flex justify-content-between">
+                    <Link to="/forgot-password ">Quên mật khẩu ?</Link>
+                    <Link to="/signup">Đăng kí tài khoản ?</Link>
+                  </div>
+                  <div className="mt-2 d-flex justify-content-center gap-15 align-items-center">
+                    <button className="login-btn my-4 py-2 px-2" type="submit">
                       Đăng nhập
                     </button>
-                    <Link to="/signup" className="primary-button signup">
-                      Đăng ký
-                    </Link>
                   </div>
                 </div>
               </form>

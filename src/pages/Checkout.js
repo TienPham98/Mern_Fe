@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { BiArrowBack } from "react-icons/bi";
-import Container from "../components/Container";
-import { useDispatch, useSelector } from "react-redux";
-import { createAnOrder, getUserCart } from "../features/user/userSlice";
-import { useFormik } from "formik";
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {createAnOrder, getUserCart} from "../features/user/userSlice";
+import {useFormik} from "formik";
 import * as yup from "yup";
+import BreadCrumb from "../components/BreadCrumb";
 
 const shippingSchema = yup.object({
   name: yup.string().required("Tên là trường bắt buộc"),
@@ -20,8 +19,6 @@ const shippingSchema = yup.object({
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const authState = useSelector((state) => state.auth);
-  const currentUser = useSelector((state) => state.auth.user);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
   const [total, setTotal] = useState(null);
   const [cartProductsState, setCartProductsState] = useState([]);
@@ -65,7 +62,7 @@ const Checkout = () => {
               shippingInfo: shippingInfo,
             })
           );
-          navigate("/my-orders");
+          navigate("/success");
         } catch (error) {
           console.log("Error creating order: ", error);
         }
@@ -81,9 +78,10 @@ const Checkout = () => {
     let items = [];
     for (let index = 0; index < cartState?.length; index++) {
       items.push({
-        product: cartState[index].productId._id,
-        quantity: cartState[index].quantity,
-        price: cartState[index].price,
+        product: cartState[index]?.productId?._id,
+        title: cartState[index]?.productId?.title,
+        quantity: cartState[index]?.quantity,
+        price: cartState[index]?.price,
       });
     }
     setCartProductsState(items);
@@ -104,7 +102,6 @@ const Checkout = () => {
           src={item?.productId?.images[0]?.url}
           className="img-fluid"
           alt={item?.title}
-          style={{ width: "50px", height: "50px" }}
         />
         <div className="w-100">
           <p className="mb-0 text-sm">{item?.productId.title}</p>
@@ -131,54 +128,75 @@ const Checkout = () => {
   };
   return (
     <>
-      <Container class1="checkout-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-7">
-            <div className="checkout-left-data">
-              <h3 className="website-name">
-                {currentUser.firstname} {currentUser.lastname}
-              </h3>
-              <nav
-                style={{ "--bs-breadcrumb-divider": ">" }}
-                aria-label="breadcrumb"
-              >
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link className="text-dark total-price" to="/cart">
-                      Giỏ hàng
-                    </Link>
-                  </li>
-                  &nbsp; /&nbsp;
-                  <li
-                    className="breadcrumb-ite total-price active"
-                    aria-current="page"
-                  >
-                    Thông tin
-                  </li>
-                  &nbsp; /
-                  <li className="breadcrumb-item total-price active">
-                    Vận chuyển
-                  </li>
-                  &nbsp; /
-                  <li
-                    className="breadcrumb-item total-price active"
-                    aria-current="page"
-                  >
-                    Thanh toán
-                  </li>
-                </ol>
-              </nav>
-              <h4 className="title total">Thông tin liên hệ</h4>
-              <p className="user-details total">
-                {currentUser.firstname} {currentUser.lastname}
-              </p>
-              <h4 className="mb-3">Địa chỉ nhận hàng</h4>
-              <form
-                onSubmit={formik.handleSubmit}
-                action=""
-                className="d-flex gap-15 flex-wrap justify-content-between"
-              >
-                <div className="flex-grow-1">
+      <BreadCrumb title="Xác nhận đặt hàng" />
+      <div className="">
+        <div className="row mx-4">
+          <div className="col-md-4 order-md-2 mb-4">
+            <h4 className="d-flex justify-content-between align-items-center mb-3">
+              <span className="text-muted">Giỏ hàng</span>
+              <span className="badge badge-secondary badge-pill">3</span>
+            </h4>
+            <ul className="list-group mb-3">
+              {cartState?.map((item, index) => (
+                <li
+                  className="list-group-item d-flex justify-content-between lh-condensed"
+                  key={index}
+                >
+                  <div>
+                    <p className="my-0">{item?.productId?.title}</p>
+                    <small className="text-muted">
+                      số lượng: {item?.quantity}
+                    </small>
+                  </div>
+                  <p className="">
+                    {(item?.price * item?.quantity).toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            <div className="card shadow-0 border">
+              <div className="card-body">
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Tổng tiền hàng :</p>
+                  <p className="mb-2">
+                    {" "}
+                    {total?.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </p>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Discount :</p>
+                  <p className="mb-2 text-success">0</p>
+                </div>
+                <hr />
+                <div className="d-flex justify-content-between">
+                  <p className="mb-2">Tổng cộng thanh toán :</p>
+                  <p className="mb-2 fw-bold">
+                    {" "}
+                    {total?.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-8 order-md-1">
+            <h4 className="mb-3">Thông tin người mua hàng</h4>
+            <form
+              className="needs-validation"
+              onSubmit={formik.handleSubmit}
+              action=""
+            >
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="firstName">Tên người nhận:</label>
                   <input
                     type="text"
                     placeholder="Tên người nhận"
@@ -191,7 +209,8 @@ const Checkout = () => {
                     {formik.touched.name && formik.errors.name}
                   </div>
                 </div>
-                <div className="flex-grow-1">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="lastName">Số điện thoại</label>
                   <input
                     type="text"
                     placeholder="Số điện thoại"
@@ -204,7 +223,10 @@ const Checkout = () => {
                     {formik.touched.phone && formik.errors.phone}
                   </div>
                 </div>
-                <div className="w-100">
+              </div>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="username">Địa chỉ nhà:</label>
                   <input
                     type="text"
                     placeholder="Địa chỉ nhà"
@@ -217,40 +239,8 @@ const Checkout = () => {
                     {formik.touched.address && formik.errors.address}
                   </div>
                 </div>
-                {/* <div className="w-100">
-                  <input
-                    type="text"
-                    placeholder="Địa chỉ nhà"
-                    className="form-control"
-                  />
-                </div> */}
-                <div className="flex-grow-1">
-                  <input
-                    type="text"
-                    placeholder="Thành phố"
-                    className="form-control"
-                    value={formik.values.city}
-                    onChange={formik.handleChange("city")}
-                    onBlur={formik.handleBlur("city")}
-                  />
-                  <div className="error ms-2 my-1">
-                    {formik.touched.city && formik.errors.city}
-                  </div>
-                </div>
-                <div className="flex-grow-1">
-                  <input
-                    type="text"
-                    placeholder="Quận/Huyện"
-                    className="form-control"
-                    value={formik.values.district}
-                    onChange={formik.handleChange("district")}
-                    onBlur={formik.handleBlur("district")}
-                  />
-                  <div className="error ms-2 my-1">
-                    {formik.touched.district && formik.errors.district}
-                  </div>
-                </div>
-                <div className="flex-grow-1">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="city">Phường / Xã</label>
                   <input
                     type="text"
                     placeholder="Phường/Xã"
@@ -263,122 +253,87 @@ const Checkout = () => {
                     {formik.touched.ward && formik.errors.ward}
                   </div>
                 </div>
-                <div className="form-group">
-                  <label htmlFor="paymentMethod">Phương thức thanh toán:</label>
-                  <div className="form-check">
-                    <input
-                      type="radio"
-                      className="form-check-input"
-                      id="cash"
-                      name="paymentMethod"
-                      value="cash"
-                      checked={formik.values.paymentMethod === "cash"}
-                      onChange={formik.handleChange("paymentMethod")}
-                      onBlur={formik.handleBlur("paymentMethod")}
-                    />
-                    <label className="form-check-label" htmlFor="cash">
-                      Tiền mặt
-                    </label>
-                    <div className="error ms-2 my-1">
-                      {formik.touched.paymentMethod &&
-                        formik.errors.paymentMethod}
-                    </div>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      type="radio"
-                      className="form-check-input"
-                      id="bankTransfer"
-                      name="paymentMethod"
-                      value="bankTransfer"
-                      checked={formik.values.paymentMethod === "bankTransfer"}
-                      onChange={formik.handleChange("paymentMethod")}
-                      onBlur={formik.handleBlur("paymentMethod")}
-                    />
-                    <label className="form-check-label" htmlFor="bankTransfer">
-                      Chuyển khoản
-                    </label>
-                    <div className="error ms-2 my-1">
-                      {formik.touched.paymentMethod &&
-                        formik.errors.paymentMethod}
-                    </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="city">Quận / Huyện</label>
+                  <input
+                    type="text"
+                    placeholder="Quận/Huyện"
+                    className="form-control"
+                    value={formik.values.district}
+                    onChange={formik.handleChange("district")}
+                    onBlur={formik.handleBlur("district")}
+                  />
+                  <div className="error ms-2 my-1">
+                    {formik.touched.district && formik.errors.district}
                   </div>
                 </div>
-                <div className="w-100">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <Link to="/cart" className="text-dark">
-                      <BiArrowBack className="me-2" />
-                      Trở về giỏ hàng
-                    </Link>
-                    <button className="primary-button" type="submit">
-                      Xác nhận đặt mua
-                    </button>
+                <div className="col-md-6 mb-3">
+                  <label htmlFor="city">Thành Phố</label>
+                  <input
+                    type="text"
+                    placeholder="Thành phố"
+                    className="form-control"
+                    value={formik.values.city}
+                    onChange={formik.handleChange("city")}
+                    onBlur={formik.handleBlur("city")}
+                  />
+                  <div className="error ms-2 my-1">
+                    {formik.touched.city && formik.errors.city}
                   </div>
-                </div>
-              </form>
-            </div>
-          </div>
-          <div className="col-5">
-            {/* <div className="border-bottom py-4">
-              <div className="d-flex gap-10 mb-2 align-align-items-center">
-                <div className="w-75 d-flex gap-10">
-                  {cart?.map((item, index) => (
-                    <div key={index} className="w-25 position-relative">
-                      <span
-                        style={{ top: "-10px", right: "2px" }}
-                        className="badge bg-secondary text-white rounded-circle p-2 position-absolute"
-                      >
-                        {item?.quantity}
-                      </span>
-                      <img
-                        className="img-fluid"
-                        src={item?.images[0]?.url}
-                        alt={item?.title}
-                      />
-                    </div>
-                  ))}
-                  <div>
-                    <h5 className="total-price">tiền hàng</h5>
-                  </div>
-                </div>
-                <div className="flex-grow-1">
-                  <h5 className="total">{total} vnđ</h5>
                 </div>
               </div>
-            </div> */}
-            <div className="border-bottom py-4">
-              {renderCartSummary()}
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="total">Tổng tiền hàng</p>
-                <p className="total">
-                  {total?.toLocaleString("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  })}{" "}
-                </p>
+
+              <h4 className="mb-3">Phương thức thanh toán</h4>
+              <div className="d-block my-3">
+                <div className="d-flex align-items-center">
+                  <input
+                    id="cash"
+                    name="paymentMethod"
+                    type="radio"
+                    value="cash"
+                    className="payment-radio mx-2"
+                    checked={formik.values.paymentMethod === "cash"}
+                    onChange={formik.handleChange("paymentMethod")}
+                    onBlur={formik.handleBlur("paymentMethod")}
+                  />
+                  <h6 className="mx-2" htmlFor="cash">
+                    Tiền mặt
+                  </h6>
+                </div>
+                <div className="d-flex align-items-center ">
+                  <input
+                    id="bankTransfer"
+                    value="bankTransfer"
+                    name="paymentMethod"
+                    type="radio"
+                    className="payment-radio mx-2"
+                    checked={formik.values.paymentMethod === "bankTransfer"}
+                    onChange={formik.handleChange("paymentMethod")}
+                    onBlur={formik.handleBlur("paymentMethod")}
+                  />
+                  <h6 className="mx-2" htmlFor="credit">
+                    chuyển khoản
+                  </h6>
+                </div>
+                <div className="mt-3 col-md-6 mb-3">
+                  <button
+                    type="submit"
+                    className="btn btn-success w-100 shadow-0 mb-2"
+                  >
+                    Xác nhận đặt hàng
+                  </button>
+                  <a href="/cart" className="btn btn-light w-100 border mt-2">
+                    {" "}
+                    Trở về giỏ hàng
+                  </a>
+                </div>
               </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="mb-0 total">Phí ship</p>
-                <p className="mb-0 total">
-                  {shippingFee.toLocaleString("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  })}{" "}
-                </p>
-              </div>
-            </div>
-            <div className="d-flex justify-content-between align-items-center border-bootom py-4">
-              <h4 className="total">Tổng cộng thanh toán</h4>
-              <h5 className="total">
-                {totalPriceAndShip.toLocaleString("vi-VN", {
-                  style: "currency",
-                  currency: "VND",
-                })}{" "}
-              </h5>
-            </div>
+            </form>
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

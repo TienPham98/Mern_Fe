@@ -1,13 +1,13 @@
 import React from "react";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Container from "../components/Container";
 import CustomInput from "../components/CustomInput";
-import { useDispatch } from "react-redux";
-import { useFormik } from "formik";
+import {useDispatch} from "react-redux";
+import {useFormik} from "formik";
 import * as yup from "yup";
-import { forgotPWToken } from "../features/user/userSlice";
+import {forgotPWToken} from "../features/user/userSlice";
 
 const Forgotpassword = () => {
   const navigate = useNavigate();
@@ -35,8 +35,8 @@ const Forgotpassword = () => {
       <Meta title={"Quên mật khẩu"} />
       <BreadCrumb title="Quên mật khẩu" />
       <Container class1="login-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
+        <div className="row d-flex justify-content-center">
+          <div className="col-12 col-lg-6">
             <div className="auth-card">
               <h3 className="text-center mb-3">Lấy lại mật khẩu</h3>
               <p className="text-center mt-2 mb-3">
@@ -44,7 +44,7 @@ const Forgotpassword = () => {
               </p>
               <form
                 onSubmit={formik.handleSubmit}
-                className="d-flex flex-column gap-15"
+                className="d-flex flex-column gap-15 "
               >
                 <CustomInput
                   type="email"
@@ -54,16 +54,15 @@ const Forgotpassword = () => {
                   onChange={formik.handleChange("email")}
                   onBlur={formik.handleBlur("email")}
                 />
-                <div className="error">
+                <div className="error text-white my-3 mx-3">
                   {formik.touched.email && formik.errors.email}
                 </div>
 
                 <div>
                   <div className="mt-3 d-flex justify-content-center flex-column gap-15 align-items-center">
-                    <button className="button border-0" type="submit">
+                    <button className="login-btn " type="submit">
                       Xác nhận
                     </button>
-                    <Link to="/login">Hủy</Link>
                   </div>
                 </div>
               </form>

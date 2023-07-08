@@ -1,5 +1,5 @@
 import axios from "axios";
-import { base_url, instance } from "../../utils/axiosconfig";
+import {base_url, instance} from "../../utils/axiosconfig";
 
 const getProducts = async (data) => {
   const queryParams = new URLSearchParams();
@@ -46,7 +46,7 @@ const addProdToWishlist = async (prodId) => {
 };
 
 const addProdToCompare = async (prodId) => {
-  const response = await instance.put(`${base_url}product/compare`, { prodId });
+  const response = await instance.put(`${base_url}product/compare`, {prodId});
   if (response.data) {
     return response.data;
   }

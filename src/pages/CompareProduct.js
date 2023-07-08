@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserCompareList } from "../features/user/userSlice";
 import { addToCompare } from "../features/products/productSlice";
 import { Link } from "react-router-dom";
+import cross from "../assets/images/cross.svg";
 
 const CompareProduct = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const CompareProduct = () => {
                       onClick={() => {
                         removeFromCompare(item?._id);
                       }}
-                      src="images/cross.svg"
+                      src={cross}
                       alt="cross"
                       className="position-absolute cross img-fluid"
                     />

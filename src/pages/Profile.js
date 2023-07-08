@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import BreadCrumb from "../components/BreadCrumb";
 import Container from "../components/Container";
-import { useFormik } from "formik";
+import {useFormik} from "formik";
 import * as yup from "yup";
-import { updateProfile } from "../features/user/userSlice";
-import { FiEdit } from "react-icons/fi";
+import {updateProfile} from "../features/user/userSlice";
+import {FiEdit} from "react-icons/fi";
+import {Link} from "react-router-dom";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const Profile = () => {
         <div className="row">
           <div className="col-12">
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="my-3">Cập nhật thông tin cá nhân </h3>
+              <h3 className="my-3">Cập nhật thông tin</h3>
               <FiEdit className="my-3" onClick={() => setEdit(false)} />
             </div>
 
@@ -128,6 +129,11 @@ const Profile = () => {
           </div>
         </div>
       </Container>
+      <div className=" d-flex justify-content-center align-items-center">
+        <Link to="/logout" className="banner-btn mb-4">
+          Đăng xuất
+        </Link>
+      </div>
     </>
   );
 };

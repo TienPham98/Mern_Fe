@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import React, {useState, useEffect} from "react";
+import {Link, useLocation, useParams} from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import BreadCrumb from "../components/BreadCrumb";
 import Meta from "../components/Meta";
 import ProductCard from "../components/ProductCard";
 import Container from "../components/Container";
 import Color from "../components/Color";
-import { TbGitCompare } from "react-icons/tb";
-import { AiOutlineHeart } from "react-icons/ai";
-import { useDispatch, useSelector } from "react-redux";
+import {TbGitCompare} from "react-icons/tb";
+import {AiOutlineHeart} from "react-icons/ai";
+import {useDispatch, useSelector} from "react-redux";
 import {
   addToCompare,
   addToWishlist,
   getProductById,
   rateProduct,
 } from "../features/products/productSlice";
-import { FaCopy } from "react-icons/fa";
-import { toast } from "react-toastify";
-import { addProdToCart, getUserCart } from "../features/user/userSlice";
+import {FaCopy} from "react-icons/fa";
+import {toast} from "react-toastify";
+import {addProdToCart, getUserCart} from "../features/user/userSlice";
+import RandomProducts from "../components/RandomProduct";
+import RecommendProd from "../components/RecommendProd";
 
 const SingleProduct = (item) => {
-  const { title, price, description } = item;
+  const {title, price, description} = item;
   const location = useLocation();
   const productLink = window.location.href;
   const [selectedQuantity, setSelectedQuantity] = useState(1);
@@ -43,7 +45,7 @@ const SingleProduct = (item) => {
     });
   };
 
-  const { id } = useParams();
+  const {id} = useParams();
   const dispatch = useDispatch();
   const productState = useSelector((state) => state.product.getProduct);
   const allProduct = useSelector((state) => state.product.products);
@@ -60,16 +62,13 @@ const SingleProduct = (item) => {
     await dispatch(
       addProdToCart({
         productId: productState?._id,
+        title: productState?.title,
         images: productState?.images[0]?.url,
         quantity: selectedQuantity,
         price: productState?.price,
       })
     );
     dispatch(getUserCart());
-  };
-
-  const handleQuantityChange = (event) => {
-    setSelectedQuantity(event.target.value);
   };
 
   function copyToClipboard() {
@@ -88,7 +87,7 @@ const SingleProduct = (item) => {
       toast.error("Vui lòng viết đánh giá");
       return false;
     } else {
-      dispatch(rateProduct({ star: star, comment: comment, prodId: id }));
+      dispatch(rateProduct({star: star, comment: comment, prodId: id}));
       setTimeout(() => {
         dispatch(getProductById(id));
       }, 200);
@@ -100,234 +99,151 @@ const SingleProduct = (item) => {
     <>
       <Meta title={productState?.title} />
       <BreadCrumb title={productState?.title} />
-      <Container class1="main-product-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-6">
-            <div className="main-product-image">
-              <div onClick={() => setImageIndex(0)}>
+      <section className="py-5">
+        <div className="container">
+          <div className="row gx-5">
+            <aside className="col-lg-6 ">
+              <div className="border rounded-4 mb-3 d-flex justify-content-center">
                 <img
+                  width="400"
+                  height="400"
                   src={
                     productState?.images[imageIndex]?.url ||
                     "https://via.placeholder.com/250"
                   }
-                  className="img-fluid"
-                  alt={productState?.name}
+                  className="rounded-4 fit"
+                  alt={productState?.title}
                 />
               </div>
-            </div>
-            <div className="other-product-images d-flex flex-wrap gap-15">
-              <div onClick={() => setImageIndex(0)}>
-                <img
-                  src={
-                    productState?.images[0]?.url ||
-                    "https://via.placeholder.com/250"
-                  }
-                  className="img-fluid"
-                  alt={productState?.name}
-                />
-              </div>
-              <div onClick={() => setImageIndex(1)}>
-                <img
-                  src={
-                    productState?.images[1]?.url ||
-                    "https://via.placeholder.com/250"
-                  }
-                  className="img-fluid"
-                  alt={productState?.name}
-                />
-              </div>
-              <div onClick={() => setImageIndex(2)}>
-                <img
-                  src={
-                    productState?.images[2]?.url ||
-                    "https://via.placeholder.com/250"
-                  }
-                  className="img-fluid"
-                  alt={productState?.name}
-                />
-              </div>
-              <div onClick={() => setImageIndex(3)}>
-                <img
-                  src={
-                    productState?.images[3]?.url ||
-                    "https://via.placeholder.com/250"
-                  }
-                  className="img-fluid"
-                  alt={productState?.name}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="col-6">
-            <div className="main-product-details">
-              <div className="border-bottom">
-                <h3 className="title">{productState?.title}</h3>
-              </div>
-              <div className="border-bottom py-3">
-                <p className="price">
-                  {productState?.price.toLocaleString("vi-VN")} đ
-                </p>
-                <div className="d-flex align-items-center gap-10">
-                  <ReactStars
-                    count={5}
-                    size={24}
-                    value={productState?.totalRating}
-                    edit={false}
-                    activeColor="#ffd700"
+              <div className="d-flex justify-content-center mb-3">
+                <div onClick={() => setImageIndex(0)}>
+                  <img
+                    width="60"
+                    height="60"
+                    className="rounded-2"
+                    src={
+                      productState?.images[0]?.url ||
+                      "https://via.placeholder.com/250"
+                    }
+                    alt={productState?.name}
                   />
-                  <p className="mb-0 t-review">
-                    ( {productState?.ratings?.length} bình luận )
-                  </p>
                 </div>
-                <a className="review-btn" href="#review">
-                  Xem bình luận
-                </a>
+                <div onClick={() => setImageIndex(1)}>
+                  <img
+                    width="60"
+                    height="60"
+                    className="rounded-2"
+                    src={
+                      productState?.images[1]?.url ||
+                      "https://via.placeholder.com/250"
+                    }
+                    alt={productState?.name}
+                  />
+                </div>
+                <div onClick={() => setImageIndex(2)}>
+                  <img
+                    width="60"
+                    height="60"
+                    className="rounded-2"
+                    src={
+                      productState?.images[2]?.url ||
+                      "https://via.placeholder.com/250"
+                    }
+                    alt={productState?.name}
+                  />
+                </div>
+                <div onClick={() => setImageIndex(3)}>
+                  <img
+                    width="60"
+                    height="60"
+                    className="rounded-2"
+                    src={
+                      productState?.images[3]?.url ||
+                      "https://via.placeholder.com/250"
+                    }
+                    alt={productState?.name}
+                  />
+                </div>
               </div>
-              <div className=" py-3">
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Loại :</h3>
-                  <p className="product-data">{productState?.category}</p>
+            </aside>
+            <main className="col-lg-6">
+              <div className="ps-lg-3">
+                <h4 className="title text-dark">{productState?.title}</h4>
+                <div className="d-flex flex-row my-3">
+                  {/* <div className="text-warning mb-1 me-2">
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fa fa-star"></i>
+                    <i className="fas fa-star-half-alt"></i>
+                    <span className="ms-1">5</span>
+                  </div> */}
+
+                  <span className="text-dark">Tình trạng :</span>
+                  <span className="text-success ms-2">Còn hàng</span>
                 </div>
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Thương hiệu :</h3>
-                  <p className="product-data">{productState?.brand}</p>
+
+                <div className="mb-3 d-flex">
+                  <h6>Đơn giá :</h6>
+                  {productState?.price && (
+                    <h6 className="mx-2">
+                      {productState.price.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </h6>
+                  )}
                 </div>
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Phân loại :</h3>
-                  <p className="product-data">{productState?.category}</p>
+
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: productState?.description,
+                  }}
+                ></div>
+
+                <div className="row">
+                  <dt className="col-3">Phân loại :</dt>
+                  <dd className="col-9">{productState?.category}</dd>
+
+                  <dt className="col-3">Thương hiệu :</dt>
+                  <dd className="col-9">{productState?.brand}</dd>
                 </div>
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Tags :</h3>
-                  <p className="product-data">{productState?.tags}</p>
-                </div>
-                <div className="d-flex gap-10 align-items-center my-2">
-                  <h3 className="product-heading">Còn hàng :</h3>
-                  <p className="product-data">{productState?.quantity}</p>
-                </div>
-                {/* <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                  <h3 className="product-heading">Size :</h3>
-                  <div className="d-flex flex-wrap gap-15">
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      S
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      M
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      XL
-                    </span>
-                    <span className="badge border border-1 bg-white text-dark border-secondary">
-                      XXL
-                    </span>
-                  </div>
-                </div> */}
-                {/* <div className="d-flex gap-10 flex-column mt-2 mb-3">
-                  <h3 className="product-heading">Màu :</h3>
-                  <Color />
-                </div> */}
-                <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
-                  <h3 className="product-heading">Số lượng :</h3>
-                  <div className="">
+
+                <hr />
+
+                <div className="row mb-4 d-flex">
+                  <div className="col-md-12 col-6 mb-3 d-flex">
+                    <label className=" mt-2 d-block">Số lượng mua : </label>
                     <input
                       type="number"
-                      name=""
+                      className="form-small mx-2 mt-2 me-4 text-center "
                       value={selectedQuantity}
-                      onChange={handleQuantityChange}
-                      min={1}
-                      max={50}
-                      className="form-control"
-                      style={{ width: "70px" }}
-                      id="quantityInput"
-                    />
+                      onChange={(e) => setSelectedQuantity(e.target.value)}
+                      min="1"
+                      step="1"
+                    ></input>
                   </div>
-                  <div className="d-flex align-items-center gap-30 ms-5">
-                    <button
-                      className="primary-button border-0"
-                      data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop"
-                      type="button"
-                      onClick={() => {
-                        handleAddToCart(productState?._id);
-                      }}
-                    >
-                      Thêm vào giỏ hàng
-                    </button>
-                    <Link to="/cart">
-                      <button className="primary-button signup">
-                        Mua ngay
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-                <div className="d-flex align-items-center gap-15">
-                  <div>
-                    <button
-                      className="btn"
-                      onClick={() => addProdToCompare(productState?._id)}
-                    >
-                      <TbGitCompare className="fs-5 me-2" /> Thêm vào so sánh
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      className="btn"
-                      onClick={() => addProdToWish(productState?._id)}
-                    >
-                      <AiOutlineHeart className="fs-5 me-2" /> Thêm vào yêu
-                      thích
-                    </button>
-                  </div>
-                </div>
-                <div className="d-flex gap-10 flex-column  my-3">
-                  <h3 className="product-heading">Vận chuyển và hoàn trả :</h3>
-                  <p className="product-data">
-                    Free shipping cho tất cả các đơn hàng trên 2.000.000 đ<br />{" "}
-                    Thời gian ship chỉ từ
-                    <b> 2-3 ngày</b>
-                  </p>
-                </div>
-                <div className="d-flex gap-10 align-items-center my-3">
-                  <h3 className="product-heading">Link sản phẩm:</h3>
-                  <p className="product-heading">{productLink}</p>
                   <button
-                    className="btn border-0"
-                    type="button"
-                    onClick={copyToClipboard}
-                    disabled={copied}
+                    className="banner-btn mx-4 col-md-12 col-6 "
+                    onClick={() =>
+                      handleAddToCart(
+                        productState?._id,
+                        selectedQuantity,
+                        productState?.price,
+                        productState?.image
+                      )
+                    }
                   >
-                    <FaCopy />
+                    Thêm vào giỏ hàng
                   </button>
-
-                  {/* <a
-                    href="javascript:void(0);"
-                    onClick={() => {
-                      copyToClipboard(
-                        "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg"
-                      );
-                    }}
-                  >
-                    Copy Link sản phẩm
-                  </a> */}
                 </div>
               </div>
-            </div>
+            </main>
           </div>
         </div>
-      </Container>
-      <Container class1="description-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h4>Mô tả sản phẩm</h4>
-            <div
-              className="bg-white p-3"
-              dangerouslySetInnerHTML={{ __html: productState?.description }}
-            >
-              {/* {productState?.description.replace(/<\/?p>/gi, "")} */}
-            </div>
-          </div>
-        </div>
-      </Container>
-      <Container class1="reviews-wrapper home-wrapper-2">
+      </section>
+
+      <Container className1="reviews-wrapper home-wrapper-2">
         <div className="row">
           <div className="col-12">
             <h3 id="review">Reviews</h3>
@@ -421,14 +337,14 @@ const SingleProduct = (item) => {
           </div>
         </div>
       </Container>
-      <Container class1="popular-wrapper py-5 home-wrapper-2">
+      <Container className1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Sản phẩm phổ biến</h3>
+            <h3 className="section-heading">Sản phẩm tương tự</h3>
           </div>
         </div>
         <div className="row">
-          <ProductCard data={topSoldProducts} amount={4} />
+          <RecommendProd data={topSoldProducts} amount={6} />
         </div>
       </Container>
     </>

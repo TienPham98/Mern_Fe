@@ -11,56 +11,56 @@ import Container from "../components/Container";
             <h6>Máy ảnh</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/camera.jpg" alt="camera" />
+          <img src="../assets/images/camera.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Camera</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/camera.jpg" alt="camera" />
+          <img src="../assets/images/camera.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Smart Tv</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/tv.jpg" alt="camera" />
+          <img src="../assets/images/tv.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Headphone</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/headphone.jpg" alt="camera" />
+          <img src="../assets/images/headphone.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Máy ảnh</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/camera.jpg" alt="camera" />
+          <img src="../assets/images/camera.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Camera</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/camera.jpg" alt="camera" />
+          <img src="../assets/images/camera.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Smart Tv</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/tv.jpg" alt="camera" />
+          <img src="../assets/images/tv.jpg" alt="camera" />
         </div>
         <div className="d-flex gap align-items-center">
           <div>
             <h6>Headphone</h6>
             <p>10 Items</p>
           </div>
-          <img src="images/headphone.jpg" alt="camera" />
+          <img src="../assets/images/headphone.jpg" alt="camera" />
         </div>
       </div>
     </div>

@@ -1,14 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Cookies from "js-cookie";
-import { NavLink, Link, useNavigate } from "react-router-dom";
-import { BsSearch, BsTelephonePlusFill } from "react-icons/bs";
-import compare from "../images/compare.svg";
-import wishlist from "../images/wishlist.svg";
-import user from "../images/user.svg";
-import cartImg from "../images/cart.svg";
-import menu from "../images/menu.svg";
-import { useSelector, useDispatch } from "react-redux";
-import { getUserCart, logoutUser } from "../features/user/userSlice";
+import {NavLink, Link, useNavigate} from "react-router-dom";
+import {
+  BsCart3,
+  BsFillMenuAppFill,
+  BsMenuButton,
+  BsSearch,
+  BsTelephonePlusFill,
+} from "react-icons/bs";
+import {
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+  FaRegUser,
+  FaRegHeart,
+  FaHome,
+} from "react-icons/fa";
+import {GiHamburgerMenu} from "react-icons/gi";
+import {GrAdd} from "react-icons/gr";
+import {MdRemove} from "react-icons/md";
+import {AiOutlineClose} from "react-icons/ai";
+
+import {useSelector, useDispatch} from "react-redux";
+import {getUserCart, logoutUser} from "../features/user/userSlice";
+import {getProductCategories} from "../features/products/productSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -16,6 +32,7 @@ const Header = () => {
   const currentUser = useSelector((state) => state.auth?.user);
   const products = useSelector((state) => state.product?.products);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
+  const allCategories = useSelector((state) => state.product?.categories);
   const [total, setTotal] = useState(0);
   const [cartQuantity, setCartQuantity] = useState(0);
 
@@ -35,6 +52,9 @@ const Header = () => {
     setTotal(sum);
     setCartQuantity(quantity);
   }, [cartState]);
+  useEffect(() => {
+    dispatch(getProductCategories());
+  }, [dispatch]);
 
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -70,44 +90,126 @@ const Header = () => {
     clearTimeout(closeSearchTimeout);
   }
 
+  useEffect(() => {
+    // mobile menu variables
+    const mobileMenuOpenBtns = document.querySelectorAll(
+      "[data-mobile-menu-open-btn]"
+    );
+    const mobileMenuCloseBtns = document.querySelectorAll(
+      "[data-mobile-menu-close-btn]"
+    );
+    const mobileMenu = document.querySelector("[data-mobile-menu]");
+
+    // mobile menu open function
+    const mobileMenuOpenFunc = function () {
+      mobileMenu.classList.add("active");
+    };
+
+    // mobile menu close function
+    const mobileMenuCloseFunc = function () {
+      mobileMenu.classList.remove("active");
+    };
+
+    // mobile menu eventListeners
+    mobileMenuOpenBtns.forEach(function (btn) {
+      btn.addEventListener("click", mobileMenuOpenFunc);
+    });
+
+    mobileMenuCloseBtns.forEach(function (btn) {
+      btn.addEventListener("click", mobileMenuCloseFunc);
+    });
+
+    // accordion variables
+    const accordionBtn = document.querySelectorAll("[data-accordion-btn]");
+    const accordionContent = document.querySelectorAll("[data-accordion]");
+
+    // accordion function
+    const accordionFunc = function () {
+      this.classList.toggle("active");
+      const accordionContent = this.nextElementSibling;
+      accordionContent.classList.toggle("active");
+    };
+
+    // accordion eventListeners
+    accordionBtn.forEach(function (btn) {
+      btn.addEventListener("click", accordionFunc);
+    });
+
+    // Clean up event listeners when component unmounts
+    return () => {
+      mobileMenuOpenBtns.forEach(function (btn) {
+        btn.removeEventListener("click", mobileMenuOpenFunc);
+      });
+
+      mobileMenuCloseBtns.forEach(function (btn) {
+        btn.removeEventListener("click", mobileMenuCloseFunc);
+      });
+
+      accordionBtn.forEach(function (btn) {
+        btn.removeEventListener("click", accordionFunc);
+      });
+    };
+  }, []);
+
   return (
     <>
-      <header className="header-top-strip px-3 py-2">
-        <div className="container-xxl">
-          <div className="row">
-            <div className="col-6">
-              <p className="text-white mb-0">
-                Sản phẩm chính hãng & Freeship đơn hàng trên 1 triệu
+      <header>
+        <div className="header-top">
+          <div className="container mb-1 ">
+            <ul className="header-social-container mb-0">
+              <li>
+                <a
+                  href="https://www.facebook.com/groups/hoaleauthentic"
+                  className="social-link"
+                >
+                  <FaFacebook />
+                </a>
+              </li>
+
+              <li>
+                <a href="/" className="social-link">
+                  <FaTwitter />
+                </a>
+              </li>
+
+              <li>
+                <a href="/" className="social-link">
+                  <FaInstagram />
+                </a>
+              </li>
+
+              <li>
+                <a href="/" className="social-link">
+                  <FaLinkedin></FaLinkedin>
+                </a>
+              </li>
+            </ul>
+
+            <div className="header-alert-news mb-0">
+              <p className="mb-0">
+                Hòa Lê Authentic - Hàng úc chính hãng giá tốt
               </p>
             </div>
-            <div className="col-6">
-              <p className="text-white text-end mb-0">
+
+            <div className="header-top-actions">
+              <p className="contact d-flex  mb-0">
                 Hotline:
-                <a className="text-white" href="tel: +84 965273494">
-                  <BsTelephonePlusFill className="mx-2" /> 096 527 3494
+                <a className="mx-2" href="tel: +84 965273494">
+                  <BsTelephonePlusFill className="" /> 096 527 3494
                 </a>
               </p>
             </div>
           </div>
         </div>
-      </header>
-      <header className="header-upper pt-3 px-3 py-2">
-        <div className="container-xxl">
-          <div className="row align-items-center">
-            <div className="col-2 logo">
-              <h5 className="small-heading">
-                <Link to="/" className="text-white text-center">
-                  Hòa Lê Authentic
-                </Link>
-                <p className="phone-mobile text-white text-end mb-0">
-                  <a className="text-white" href="tel: +84 965273494">
-                    <BsTelephonePlusFill className="mx-2" /> 096 527 3494
-                  </a>
-                </p>
-              </h5>
-            </div>
-            <div className="col-5 search-group">
-              <div className="input-group mb-2">
+
+        <div className="header-main">
+          <div className="container">
+            <a href="/" className="header-logo">
+              <h3>Hòa Lê Authentic</h3>
+            </a>
+
+            <div className="header-search-container">
+              <div className="input-group">
                 <input
                   type="text"
                   className="form-control "
@@ -120,13 +222,13 @@ const Header = () => {
                   onFocus={() => setIsSearchOpen(true)}
                   onBlur={handleBlur}
                 />
-                <span className="input-group-text py-2" id="basic-addon2">
+                <span className="input-group-text" id="basic-addon2">
                   <BsSearch className="fs-6" />
                 </span>
               </div>
               {searchValue && isSearchOpen && (
                 <div
-                  className=" search-product position-absolute bg-white border border-secondary w-80 h-40 z-index-9999"
+                  className=" search-product position-absolute bg-white border border-secondary h-40 "
                   // onMouseLeave={() => setSearchValue("")}
                 >
                   {isLoading ? (
@@ -135,7 +237,7 @@ const Header = () => {
                     <div></div>
                   ) : (
                     <ul className="list-group ">
-                      {searchResults.map(({ title, images, _id }) => (
+                      {searchResults.map(({title, images, _id}) => (
                         <Link
                           key={_id}
                           className="list-group-item list-group-item-action"
@@ -144,7 +246,7 @@ const Header = () => {
                           <div className="d-flex align-items-center">
                             <div
                               className="me-3 flex-shrink-0"
-                              style={{ width: 80 }}
+                              style={{width: 80}}
                             >
                               <img
                                 src={images[0]?.url}
@@ -163,147 +265,395 @@ const Header = () => {
                 </div>
               )}
             </div>
-            <div className="col-5">
-              <div className="header-upper-links d-flex align-items-center justify-content-between">
-                <div>
-                  <Link
-                    to="/compare-product"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
-                    <img src={compare} alt="compare" />
-                    <p className="mb-0">
-                      So sánh <br /> sản phẩm
-                    </p>
-                  </Link>
-                </div>
 
-                <div>
-                  <Link
-                    to="/wishlist"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
-                    <img src={wishlist} alt="wishlist" />
-                    <p className="mb-0">
-                      Danh sách <br /> yêu thích
-                    </p>
-                  </Link>
-                </div>
+            <div className="header-user-actions">
+              <div>
+                <Link to="/wishlist">
+                  <button className="action-btn">
+                    <FaRegHeart />
+                  </button>
+                </Link>
+              </div>
 
-                <div>
-                  {currentUser ? (
-                    <div>
-                      <Link
-                        to="/profile"
-                        className="d-flex align-items-center gap-10 text-white"
-                      >
-                        <img src={user} alt="user" />
-                        <p className="mb-0">
-                          Tài khoản:
-                          <br />
-                          {currentUser.lastname}
-                        </p>
-                      </Link>
-                    </div>
-                  ) : (
-                    <div>
-                      <Link
-                        to="/login"
-                        className="d-flex align-items-center gap-10 text-white"
-                      >
-                        <img src={user} alt="user" />
-                        <p className="mb-0">
-                          Đăng nhập <br /> Tài khoản
-                        </p>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <Link
-                    to="/cart"
-                    className="d-flex align-items-center gap-10 text-white"
-                  >
-                    <img src={cartImg} alt="cart" />
-                    <div className="d-flex flex-column gap-10">
-                      <span className="badge bg-white text-dark">
-                        {cartState?.length ? cartState?.length : 0}
-                      </span>
-                      <p className="mb-0 header-total">
-                        {total?.toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })
-                          ? total?.toLocaleString("vi-VN", {
-                              style: "currency",
-                              currency: "VND",
-                            })
-                          : 0}
-                      </p>
-                    </div>
-                  </Link>
-                </div>
+              <div>
+                {currentUser ? (
+                  <div>
+                    <Link to="/profile">
+                      <button className="action-btn">
+                        <FaRegUser />
+                      </button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div>
+                    <Link to="/login">
+                      <button className="action-btn">
+                        <FaRegUser />
+                      </button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+              <div>
+                <Link to="/cart">
+                  <button className="action-btn">
+                    <BsCart3 />
+                    <span className="count">
+                      {cartState?.length ? cartState?.length : 0}
+                    </span>
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
-      </header>
-      <header className="header-bottom py-2">
-        <div className="container-xxl">
-          <div className="row">
-            <div className="col-12">
-              <div className="menu-bottom d-flex align-items-center gap-30">
-                <div>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-secondary dropdown-toggle bg-transparent border-0 gap-10 d-flex align-items-center"
-                      type="button"
-                      id="dropdownMenuButton1"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <img src={menu} alt="" />
-                      <span className="me-2 d-inline-block">
-                        Phân loại sản phẩm
-                      </span>
-                    </button>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownMenuButton1"
-                    >
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Action
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Another action
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item text-white" to="">
-                          Something else here
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
+
+        <nav className="desktop-navigation-menu">
+          <div className="container">
+            <ul className="desktop-menu-category-list">
+              <li className="menu-category">
+                <a href="/" className="menu-title">
+                  Trang chủ
+                </a>
+              </li>
+
+              <li className="menu-category">
+                <a href="/" className="menu-title">
+                  Phân loại
+                </a>
+
+                <div className="dropdown-panel">
+                  <ul className="dropdown-panel-list">
+                    <li className="menu-title">
+                      <a href="/">Thực phẩm chức năng</a>
+                    </li>
+
+                    {/* <li className="panel-list-item">
+                      <a href={`/product?category=Vitamin}`}>Vitamin</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Collagen</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Omega</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 4</a>
+                    </li>*/}
+                  </ul>
+
+                  <ul className="dropdown-panel-list">
+                    <li className="menu-title">
+                      <a href="/">Mỹ Phẩm</a>
+                    </li>
+
+                    {/* <li className="panel-list-item">
+                      <a href="/">Phân loại 1</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 2</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 3</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 4</a>
+                    </li> */}
+                  </ul>
+
+                  <ul className="dropdown-panel-list">
+                    <li className="menu-title">
+                      <a href="/">Hàng tiêu dùng</a>
+                    </li>
+
+                    {/* <li className="panel-list-item">
+                      <a href="/">Phân loại 1</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 2</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 3</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 4</a>
+                    </li> */}
+                  </ul>
+
+                  <ul className="dropdown-panel-list">
+                    <li className="menu-title">
+                      <a href="/">Hỗ trợ làm đẹp</a>
+                    </li>
+
+                    {/* <li className="panel-list-item">
+                      <a href="/">Phân loại 1</a>
+                    </li> */}
+
+                    {/* <li className="panel-list-item">
+                      <a href="/">Phân loại 2</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 3</a>
+                    </li>
+
+                    <li className="panel-list-item">
+                      <a href="/">Phân loại 4</a>
+                    </li> */}
+                  </ul>
                 </div>
-                <div className="menu-links">
-                  <div className="d-flex align-items-center gap-15">
-                    <NavLink to="/">Trang chủ</NavLink>
-                    <NavLink to="/product">Sản phẩm</NavLink>
-                    <NavLink to="/my-orders">Sản phẩm đã mua</NavLink>
-                    <NavLink to="/blogs">Tin tức</NavLink>
-                    <NavLink to="/contact">Liên hệ</NavLink>
-                    {currentUser ? (
-                      <NavLink to="/logout">Đăng Xuất</NavLink>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
+              </li>
+
+              <li className="menu-category">
+                <a href="/product" className="menu-title">
+                  Tất cả sản phẩm
+                </a>
+                {/* 
+                <ul className="dropdown-list">
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 1</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 2</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 3</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 4</a>
+                  </li>
+                </ul> */}
+              </li>
+
+              <li className="menu-category">
+                <a href="/contact" className="menu-title">
+                  Liên hệ
+                </a>
+
+                {/* <ul className="dropdown-list">
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 1</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 2</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 3</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 4</a>
+                  </li>
+                </ul> */}
+              </li>
+
+              {/* <li className="menu-category">
+                <a href="/" className="menu-title">
+                  Dành cho người già
+                </a>
+
+                <ul className="dropdown-list">
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 1</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 2</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 3</a>
+                  </li>
+
+                  <li className="dropdown-item">
+                    <a href="/">sản phẩm 4</a>
+                  </li>
+                </ul>
+              </li> */}
+
+              <li className="menu-category">
+                <a href="/blogs" className="menu-title">
+                  Tin tức
+                </a>
+              </li>
+            </ul>
           </div>
+        </nav>
+
+        {/* Mobile menu start */}
+
+        <div className="mobile-bottom-navigation">
+          <button className="action-btn" data-mobile-menu-open-btn>
+            <GiHamburgerMenu />
+          </button>
+
+          <button className="action-btn">
+            <a href="/cart" className="user-cart">
+              <BsCart3 fs="6" />
+            </a>
+          </button>
+
+          <button className="action-btn">
+            <a href="/" className="user-home">
+              <FaHome />
+            </a>
+          </button>
+
+          <button className="action-btn">
+            <a href="/wishlist" className="user-wishlist">
+              <FaRegHeart />
+            </a>
+          </button>
+
+          <button className="action-btn" data-mobile-menu-open-btn>
+            <a href="/profile" className="user-profile">
+              <FaRegUser />
+            </a>
+          </button>
         </div>
+
+        <nav className="mobile-navigation-menu  has-scrollbar" data-mobile-menu>
+          <div className="menu-top">
+            <h2 className="menu-title">Menu</h2>
+
+            <button className="menu-close-btn" data-mobile-menu-close-btn>
+              <AiOutlineClose />
+            </button>
+          </div>
+
+          <ul className="mobile-menu-category-list">
+            <li className="menu-category">
+              <a href="/" className="menu-title">
+                Home
+              </a>
+            </li>
+
+            <li className="menu-category">
+              <button className="accordion-menu" data-accordion-btn>
+                <a href="/product" className="menu-title">
+                  Tất cả sản phẩm
+                </a>
+
+                {/* <div>
+                  <GrAdd name="add-outline" className="add-icon" />
+                  <MdRemove name="remove-outline" className="remove-icon" />
+                </div> */}
+              </button>
+
+              {/* <ul className="submenu-category-list" data-accordion>
+                <li className="submenu-category">
+                  <a href="/" className="submenu-title">
+                    Shirt
+                  </a>
+                </li>
+
+                <li className="submenu-category">
+                  <a href="/" className="submenu-title">
+                    Shorts & Jeans
+                  </a>
+                </li>
+
+                <li className="submenu-category">
+                  <a href="/" className="submenu-title">
+                    Safety Shoes
+                  </a>
+                </li>
+
+                <li className="submenu-category">
+                  <a href="/" className="submenu-title">
+                    Wallet
+                  </a>
+                </li>
+              </ul> */}
+            </li>
+
+            <li className="menu-category">
+              <button className="accordion-menu" data-accordion-btn>
+                <p className="menu-title">Phân loại</p>
+
+                <div>
+                  <GrAdd name="add-outline" className="add-icon" />
+                  <MdRemove name="remove-outline" className="remove-icon" />
+                </div>
+              </button>
+
+              <ul className="submenu-category-list" data-accordion>
+                {allCategories.map((category, index) => (
+                  <li className="submenu-category">
+                    <a
+                      href={`/product?category=${category.title}`}
+                      className="submenu-title"
+                    >
+                      {category.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+
+            <li className="menu-category">
+              <a href="/blogs" className="menu-title">
+                Blog
+              </a>
+            </li>
+          </ul>
+
+          <div className="menu-bottom">
+            <ul className="menu-category-list">
+              <li className="menu-category">
+                <button className="accordion-menu" data-accordion-btn>
+                  <a href="/logout" className="menu-title">
+                    Đăng xuất
+                  </a>
+                </button>
+              </li>
+            </ul>
+
+            <ul className="menu-social-container">
+              <li>
+                <a
+                  href="https://www.facebook.com/groups/hoaleauthentic"
+                  className="social-link"
+                >
+                  <FaFacebook />
+                </a>
+              </li>
+
+              <li>
+                <a href="/" className="social-link">
+                  <FaTwitter />
+                </a>
+              </li>
+
+              <li>
+                <a href="/" className="social-link">
+                  <FaInstagram />
+                </a>
+              </li>
+
+              <li>
+                <a href="/" className="social-link">
+                  <FaLinkedin />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        {/* Mobile menu end */}
       </header>
     </>
   );

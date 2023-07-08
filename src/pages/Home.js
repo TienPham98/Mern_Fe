@@ -1,24 +1,34 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import Marquee from "react-fast-marquee";
-import BlogCard from "../components/BlogCard";
-import ProductCard from "../components/ProductCard";
-import SpecialProduct from "../components/SpecialProduct";
-import Container from "../components/Container";
-import { services } from "../utils/Data";
+import React, {useEffect} from "react";
 import Meta from "../components/Meta";
 import {
   getAllProducts,
   getProductCategories,
 } from "../features/products/productSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllBlogs } from "../features/blogs/blogSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {getAllBlogs} from "../features/blogs/blogSlice";
+
+import wishlist from "../assets/images/wishlist.svg";
+import GrFb from "../assets/images/gr-fb.png";
+import quotes from "../assets/images/icons/quotes.svg";
+import ctaBanner from "../assets/images/cta-banner.jpg";
+import ProductShowcase from "../components/ProductShowcase";
+import NewShowcase from "../components/NewShowcase";
+import BlogCard2 from "../components/BlogCard2";
+import BannerSlider from "../components/BannerSlider";
+import ProductDeal from "../components/ProductDeal";
+import {FaMoneyCheckAlt} from "react-icons/fa";
+import {IoArrowUndoOutline} from "react-icons/io5";
+import {MdLocalShipping} from "react-icons/md";
+import BestSeller from "../components/BestSeller";
+import {BiPhoneCall} from "react-icons/bi";
+import {BsFillRocketFill} from "react-icons/bs";
 
 const Home = () => {
   const dispatch = useDispatch();
 
   const allProduct = useSelector((state) => state.product?.products);
   const allBlogs = useSelector((state) => state.blog?.blogs);
+  const allCategories = useSelector((state) => state.product?.categories);
 
   useEffect(() => {
     dispatch(getProductCategories());
@@ -39,328 +49,353 @@ const Home = () => {
   return (
     <>
       <Meta title={"Hoà Lê Authentic"} />
-      <Container class1="home-wrapper-1 py-5">
-        <div className="container-xxl">
-          <div className="row">
-            <div className="col-6">
-              <div className="main-banner position-relative ">
-                <img
-                  src="images/main-banner-1.png"
-                  className="img-fluid rounded-3"
-                  alt="main-banner"
-                />
-                <div className="main-banner-content position-absolute">
-                  <Link to="/product" className="primary-button">
-                    Xem thêm
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="col-6">
-              <div className="d-flex flex-wrap gap-20 justify-content-between align-items-center">
-                <div className="small-banner position-relative">
-                  <div class="card">
-                    <img
-                      className="card-image"
-                      src="images/b-1.png"
-                      alt="brand"
-                    />
-                    <div class="category"> Best seller </div>
-                    <div class="heading">Vitamin e krikland</div>
-                    <button class="btn">Xem ngay</button>
-                  </div>
-                </div>
-                <div className="small-banner position-relative">
-                  <div class="card">
-                    <img
-                      className="card-image"
-                      src="images/b-2.png"
-                      alt="brand"
-                    />
-                    <div class="category"> Best seller </div>
-                    <div class="heading">Vitamin tổng hợp</div>
-                    <button class="btn">Xem ngay</button>
-                  </div>
-                </div>
-                <div className="small-banner position-relative ">
-                  <div class="card">
-                    <img
-                      className="card-image"
-                      src="images/b-3.png"
-                      alt="brand"
-                    />
-                    <div class="category"> Best seller </div>
-                    <div class="heading">Canxi D3 tổng hợp</div>
-                    <button class="btn">Xem ngay</button>
-                  </div>
-                </div>
-                <div className="small-banner position-relative ">
-                  <div class="card">
-                    <img
-                      className="card-image"
-                      src="images/b-4.png"
-                      alt="brand"
-                    />
-                    <div class="category"> Best seller </div>
-                    <div class="heading">Dầu cá BlackMores</div>
-                    <button class="btn">Xem ngay</button>
-                  </div>
-                </div>
-                <div className="small-banner position-relative ">
-                  <div class="card">
-                    <img
-                      className="card-image"
-                      src="images/b-5.png"
-                      alt="brand"
-                    />
-                    <div class="category"> Best seller </div>
-                    <div class="heading">Bổ xương khớp</div>
-                    <button class="btn">Xem ngay</button>
-                  </div>
-                </div>
-                <div className="small-banner position-relative ">
-                  <div class="card">
-                    <img
-                      className="card-image"
-                      src="images/b-6.png"
-                      alt="brand"
-                    />
-                    <div class="category"> Best seller </div>
-                    <div class="heading">Omega 3-6-9</div>
-                    <button class="btn">Xem ngay</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container>
-      <Container class1="home-wrapper-2 py-3 px-3">
-        <div className="row">
-          <div className="col-12">
-            <div className="servies d-flex align-items-center justify-content-between">
-              {services?.map((i, j) => {
-                return (
-                  <div className="d-flex align-items-center gap-15" key={j}>
-                    <img src={i.image} alt="services" />
-                    <div>
-                      <h6>{i.title}</h6>
-                      <p className="mb-0">{i.tagline}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </Container>
-      {/* <Container class1="home-wrapper-2 py-3">
-        <div className="row">
-          <div className="col-12">
-            <div className="categories d-flex justify-content-between flex-wrap align-items-center">
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Máy ảnh</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Camera</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Smart Tv</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/tv.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Headphone</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/headphone.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Máy ảnh</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Camera</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Smart Tv</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/tv.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Headphone</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/headphone.jpg" alt="camera" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container> */}
-      <Container class1="featured-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="section-heading">Sản phẩm nổi bật</h3>
-          </div>
-          <ProductCard data={topSoldProducts} amount={20} />
-        </div>
-      </Container>
 
-      <Container class1="special-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="section-heading">Sản phẩm đặc biệt</h3>
-          </div>
-        </div>
-        <div className="row">
-          {allProduct &&
-            allProduct
-              .filter((item) => item.tags === "special")
-              .map((item, index) => (
-                <SpecialProduct
-                  key={index}
-                  title={item?.title}
-                  brand={item?.brand}
-                  price={item?.price}
-                  quantity={item?.quantity}
-                  images={item?.images}
-                  id={item?._id}
-                />
-              ))}
-        </div>
-      </Container>
-      <Container class1="popular-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="section-heading">Sản phẩm phổ biến </h3>
-          </div>
-        </div>
-        <div className="row">
-          <ProductCard data={allProduct} amount={24} title="popular" />
-        </div>
-      </Container>
-      <Container class1="marque-wrapper home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <div className="marquee-inner-wrapper d-flex card-wrapper ">
-              <Marquee className="d-flex align-items-center">
-                <div className="d-flex mx-4 justify-content-center align-items-center">
-                  <img
-                    className="img-fluid"
-                    src="images/brand-01.png"
-                    alt="brand"
-                  />
+      <div className="banner">
+        <BannerSlider />
+      </div>
+      {/* Banner end */}
+
+      {/* Categories start */}
+      <div className="category">
+        <div className="container">
+          {/* <div className="category-item-container has-scrollbar">
+            <div className="category-item">
+              <div className="category-img-box">
+                <img src={wishlist} alt="dress & frock" width="30" />
+              </div>
+
+              <div className="category-content-box">
+                <div className="category-content-flex">
+                  <h3 className="category-item-title">Vitamin</h3>
+
+                  <p className="category-item-amount">(53)</p>
                 </div>
-                <div className="d-flex mx-4 justify-content-center align-items-center">
-                  <img
-                    className="img-fluid"
-                    src="images/brand-02.png"
-                    alt="brand"
-                  />
-                </div>
-                <div className="d-flex mx-4 justify-content-center align-items-center">
-                  <img
-                    className="img-fluid"
-                    src="images/brand-03.png"
-                    alt="brand"
-                  />
-                </div>
-                <div className="d-flex mx-4 justify-content-center align-items-center">
-                  <img
-                    className="img-fluid"
-                    src="images/brand-04.png"
-                    alt="brand"
-                  />
-                </div>
-                <div className="d-flex mx-4 justify-content-center align-items-center">
-                  <img
-                    className="img-fluid mt-5"
-                    src="images/brand-05.png"
-                    alt="brand"
-                  />
-                </div>
-                <div className="d-flex mx-4 justify-content-center align-items-center">
-                  <img
-                    className="img-fluid mt-2"
-                    src="images/brand-06.png"
-                    alt="brand"
-                  />
-                </div>
-              </Marquee>
+
+                <a href={`/product?category=Vitamin`} className="category-btn">
+                  xem thêm
+                </a>
+              </div>
             </div>
-          </div>
+
+            <div className="category-item">
+              <div className="category-img-box">
+                <img src={wishlist} alt="winter wear" width="30" />
+              </div>
+
+              <div className="category-content-box">
+                <div className="category-content-flex">
+                  <h3 className="category-item-title">Collagen</h3>
+
+                  <p className="category-item-amount">(58)</p>
+                </div>
+
+                <a href={`/product?category=Collagen`} className="category-btn">
+                  xem thêm
+                </a>
+              </div>
+            </div>
+
+            <div className="category-item">
+              <div className="category-img-box">
+                <img src={wishlist} alt="glasses & lens" width="30" />
+              </div>
+
+              <div className="category-content-box">
+                <div className="category-content-flex">
+                  <h3 className="category-item-title">Omega</h3>
+
+                  <p className="category-item-amount">(68)</p>
+                </div>
+
+                <a href={`/product?category=Omega`} className="category-btn">
+                  xem thêm
+                </a>
+              </div>
+            </div>
+
+            <div className="category-item">
+              <div className="category-img-box">
+                <img src={wishlist} alt="shorts & jeans" width="30" />
+              </div>
+
+              <div className="category-content-box">
+                <div className="category-content-flex">
+                  <h3 className="category-item-title">Sắt & Kẽm</h3>
+
+                  <p className="category-item-amount">(84)</p>
+                </div>
+
+                <a href={`/product?category=Sat`} className="category-btn">
+                  xem thêm
+                </a>
+              </div>
+            </div>
+          </div> */}
         </div>
-      </Container>
-      <Container class1="blog-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <div className="btn-container mb-4">
-              <a className="btn-content" href="blogs">
-                <span className="btn-title">Tin tức</span>
-                <span className="icon-arrow">
-                  <svg
-                    width="66px"
-                    height="43px"
-                    viewBox="0 0 66 43"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g
-                      id="arrow"
-                      stroke="none"
-                      strokeWidth="1"
-                      fill="none"
-                      fillRule="evenodd"
+      </div>
+
+      {/* categories end */}
+
+      {/* Product Container */}
+      <div className="product-container">
+        <div className="container">
+          {/*  SIDEBAR */}
+
+          <div className="sidebar  has-scrollbar" data-mobile-menu>
+            <div className="sidebar-category">
+              <div className="sidebar-top">
+                <h2 className="sidebar-title">Category</h2>
+                <button
+                  className="sidebar-close-btn"
+                  data-mobile-menu-close-btn
+                >
+                  <ion-icon name="close-outline"></ion-icon>
+                </button>
+              </div>
+
+              <ul className="sidebar-menu-category-list">
+                {allCategories.map((category, index) => (
+                  <li className="sidebar-menu-category" key={index}>
+                    <button
+                      className="sidebar-accordion-menu"
+                      data-accordion-btn
                     >
-                      <path
-                        id="arrow-icon-one"
-                        d="M40.1543933,3.89485454 L43.9763149,0.139296592 C44.1708311,-0.0518420739 44.4826329,-0.0518571125 44.6771675,0.139262789 L65.6916134,20.7848311 C66.0855801,21.1718824 66.0911863,21.8050225 65.704135,22.1989893 C65.7000188,22.2031791 65.6958657,22.2073326 65.6916762,22.2114492 L44.677098,42.8607841 C44.4825957,43.0519059 44.1708242,43.0519358 43.9762853,42.8608513 L40.1545186,39.1069479 C39.9575152,38.9134427 39.9546793,38.5968729 40.1481845,38.3998695 C40.1502893,38.3977268 40.1524132,38.395603 40.1545562,38.3934985 L56.9937789,21.8567812 C57.1908028,21.6632968 57.193672,21.3467273 57.0001876,21.1497035 C56.9980647,21.1475418 56.9959223,21.1453995 56.9937605,21.1432767 L40.1545208,4.60825197 C39.9574869,4.41477773 39.9546013,4.09820839 40.1480756,3.90117456 C40.1501626,3.89904911 40.1522686,3.89694235 40.1543933,3.89485454 Z"
-                        fill="#FFFFFF"
-                      ></path>
-                      <path
-                        id="arrow-icon-two"
-                        d="M20.1543933,3.89485454 L23.9763149,0.139296592 C24.1708311,-0.0518420739 24.4826329,-0.0518571125 24.6771675,0.139262789 L45.6916134,20.7848311 C46.0855801,21.1718824 46.0911863,21.8050225 45.704135,22.1989893 C45.7000188,22.2031791 45.6958657,22.2073326 45.6916762,22.2114492 L24.677098,42.8607841 C24.4825957,43.0519059 24.1708242,43.0519358 23.9762853,42.8608513 L20.1545186,39.1069479 C19.9575152,38.9134427 19.9546793,38.5968729 20.1481845,38.3998695 C20.1502893,38.3977268 20.1524132,38.395603 20.1545562,38.3934985 L36.9937789,21.8567812 C37.1908028,21.6632968 37.193672,21.3467273 37.0001876,21.1497035 C36.9980647,21.1475418 36.9959223,21.1453995 36.9937605,21.1432767 L20.1545208,4.60825197 C19.9574869,4.41477773 19.9546013,4.09820839 20.1480756,3.90117456 C20.1501626,3.89904911 20.1522686,3.89694235 20.1543933,3.89485454 Z"
-                        fill="#FFFFFF"
-                      ></path>
-                      <path
-                        id="arrow-icon-three"
-                        d="M0.154393339,3.89485454 L3.97631488,0.139296592 C4.17083111,-0.0518420739 4.48263286,-0.0518571125 4.67716753,0.139262789 L25.6916134,20.7848311 C26.0855801,21.1718824 26.0911863,21.8050225 25.704135,22.1989893 C25.7000188,22.2031791 25.6958657,22.2073326 25.6916762,22.2114492 L4.67709797,42.8607841 C4.48259567,43.0519059 4.17082418,43.0519358 3.97628526,42.8608513 L0.154518591,39.1069479 C-0.0424848215,38.9134427 -0.0453206733,38.5968729 0.148184538,38.3998695 C0.150289256,38.3977268 0.152413239,38.395603 0.154556228,38.3934985 L16.9937789,21.8567812 C17.1908028,21.6632968 17.193672,21.3467273 17.0001876,21.1497035 C16.9980647,21.1475418 16.9959223,21.1453995 16.9937605,21.1432767 L0.15452076,4.60825197 C-0.0425130651,4.41477773 -0.0453986756,4.09820839 0.148075568,3.90117456 C0.150162624,3.89904911 0.152268631,3.89694235 0.154393339,3.89485454 Z"
-                        fill="#FFFFFF"
-                      ></path>
-                    </g>
-                  </svg>
-                </span>
-              </a>
+                      <div className="menu-title-flex">
+                        <p className="menu-title">{category.title}</p>
+                      </div>
+                      {/* <div>
+                        <MdOutlineAdd className="menu-add-icon" />
+                      </div> */}
+                    </button>
+
+                    {/* <ul className="sidebar-submenu-category-list" data-accordion>
+                    <li className="sidebar-submenu-category">
+                      <a href="/" className="sidebar-submenu-title">
+                        <p className="product-name">Shirt</p>
+                        <data
+                          value="300"
+                          className="stock"
+                          title="Available Stock"
+                        >
+                          300
+                        </data>
+                      </a>
+                    </li>
+
+                    <li className="sidebar-submenu-category">
+                      <a href="/" className="sidebar-submenu-title">
+                        <p className="product-name">shorts & jeans</p>
+                        <data
+                          value="60"
+                          className="stock"
+                          title="Available Stock"
+                        >
+                          60
+                        </data>
+                      </a>
+                    </li>
+
+                    <li className="sidebar-submenu-category">
+                      <a href="/" className="sidebar-submenu-title">
+                        <p className="product-name">jacket</p>
+                        <data
+                          value="50"
+                          className="stock"
+                          title="Available Stock"
+                        >
+                          50
+                        </data>
+                      </a>
+                    </li>
+
+                    <li className="sidebar-submenu-category">
+                      <a href="/" className="sidebar-submenu-title">
+                        <p className="product-name">dress & frock</p>
+                        <data
+                          value="87"
+                          className="stock"
+                          title="Available Stock"
+                        >
+                          87
+                        </data>
+                      </a>
+                    </li>
+                  </ul> */}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="product-showcase">
+              <h3 className="showcase-heading">best sellers</h3>
+
+              <div className="showcase-wrapper">
+                <BestSeller count={4} data={topSoldProducts} />
+              </div>
+            </div>
+          </div>
+
+          <div className="product-box">
+            {/* PRODUCT MINIMAL */}
+
+            <div className="product-minimal">
+              <ProductShowcase title="Sản phẩm mới" productCount={6} />
+              <ProductShowcase title="Bán chạy" productCount={6} />
+              <ProductShowcase title="Đánh giá tốt" productCount={6} />
+            </div>
+
+            {/* PRODUCT FEATURED */}
+
+            <ProductDeal />
+
+            {/* PRODUCT GRID */}
+
+            <div className="product-main">
+              <h2 className="title">New Products</h2>
+
+              <NewShowcase productCount={12} />
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-12">
-            <BlogCard blogs={latestBlogs} amount={4} />
+
+        <div>
+          <div className="container">
+            <div className="testimonials-box">
+              <div className="testimonial">
+                <h2 className="title">Group Bán Hàng</h2>
+
+                <div className="testimonial-card">
+                  <img
+                    src={GrFb}
+                    alt="Group-fb"
+                    className="testimonial-banner"
+                  />
+
+                  <p className="testimonial-name">Hòa Lê Authentic</p>
+
+                  <p className="testimonial-title">Chuyên hàng chính hãng</p>
+
+                  <a
+                    href=" https://www.facebook.com/groups/hoaleauthentic"
+                    className="banner-btn mb-2 w-100"
+                  >
+                    Click để tham gia nhóm
+                  </a>
+
+                  <img
+                    src={quotes}
+                    alt="quotation"
+                    className="quotation-img"
+                    width="26"
+                  />
+
+                  <p className="testimonial-desc">
+                    Chúng tôi cung cấp các sản phẩm chính hãng của các nước: Úc,
+                    Anh, Mỹ, Đức, Hàn, Nhật
+                  </p>
+                </div>
+              </div>
+
+              <div className="cta-container">
+                <img
+                  src={ctaBanner}
+                  alt="summer collection"
+                  className="cta-banner"
+                />
+
+                <a href="/product" className="cta-content">
+                  <p className="discount">25% Discount</p>
+
+                  <h2 className="cta-title">Summer collection</h2>
+
+                  <p className="cta-text">Starting 200.000 đ</p>
+
+                  <button className="cta-btn">Shop now</button>
+                </a>
+              </div>
+
+              <div className="service">
+                <h2 className="title">Our Services</h2>
+
+                <div className="service-container">
+                  <a href="#" className="service-item">
+                    <div className="service-icon">
+                      <MdLocalShipping className="service-icon-logo mb-4" />
+                    </div>
+
+                    <div className="service-content">
+                      <h3 className="service-title">Vận chuyển nhanh</h3>
+                      <p className="service-desc">Gửi hàng ngay trong ngày</p>
+                    </div>
+                  </a>
+
+                  <a href="#" className="service-item">
+                    <div className="service-icon">
+                      <BsFillRocketFill className="service-icon-logo mb-4" />
+                    </div>
+                    <div className="service-content">
+                      <h3 className="service-title">Ship nhanh nội thành</h3>
+                      <p className="service-desc">Ship nhanh Hà Nội</p>
+                    </div>
+                  </a>
+
+                  <a href="#" className="service-item">
+                    <div className="service-icon">
+                      <BiPhoneCall className="service-icon-logo mb-4" />
+                    </div>
+
+                    <div className="service-content">
+                      <h3 className="service-title">Hỗ trợ nhanh chóng</h3>
+                      <p className="service-desc">Hours: 8AM - 11PM</p>
+                    </div>
+                  </a>
+
+                  <a href="#" className="service-item">
+                    <div className="service-icon">
+                      <IoArrowUndoOutline className="service-icon-logo mb-4" />
+                    </div>
+
+                    <div className="service-content">
+                      <h3 className="service-title">Hỗ trợ đổi trả</h3>
+                      <p className="service-desc">Hỗ trợ đổi trả nhanh, gọn</p>
+                    </div>
+                  </a>
+
+                  <a href="#" className="service-item">
+                    <div className="service-icon">
+                      <FaMoneyCheckAlt className="service-icon-logo mb-4" />
+                    </div>
+
+                    <div className="service-content">
+                      <h3 className="service-title">Ưu đãi liên tục</h3>
+                      <p className="service-desc">Ưu đãi hàng tuần</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </Container>
+
+        {/* Blogs */}
+        <div className="blog">
+          <h2 className="title d-flex justify-content-center mt-2 ">
+            <a href="/blogs" className="title mb-0">
+              Tin tức
+            </a>
+          </h2>
+          <div className="mx-3">
+            <BlogCard2 amount={4} blogs={allBlogs} />
+          </div>
+          <a
+            href="/blogs"
+            className="blog-title d-flex justify-content-center mt-2"
+          >
+            Xem thêm
+          </a>
+        </div>
+        {/* Blogs end here */}
+      </div>
     </>
   );
 };

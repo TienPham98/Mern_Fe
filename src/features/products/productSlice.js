@@ -1,12 +1,23 @@
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import { productService } from "./productService";
-import { toast } from "react-toastify";
+import {createSlice, createAsyncThunk, createAction} from "@reduxjs/toolkit";
+import {productService} from "./productService";
+import {toast} from "react-toastify";
 
 export const getAllProducts = createAsyncThunk(
   "product/get-all-product",
   async (data, thunkAPI) => {
     try {
       return await productService.getProducts(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getProductsByCat = createAsyncThunk(
+  "product/get-product-by-cat",
+  async ({category}, thunkAPI) => {
+    try {
+      return await productService.getProducts({category});
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -68,24 +79,11 @@ export const rateProduct = createAsyncThunk(
   }
 );
 
-export const filterProductsByCategory = createAction(
-  "product/filter-by-category"
-);
-
-export const filterProductsByTags = createAction("product/filter-by-tags");
-
-export const filterProductsByNameAsc = createAction(
-  "product/filter-by-name-az"
-);
-
 export const resetState = createAction("Reset_all");
 
 const initialState = {
   products: [],
   categories: [],
-  filteredProductsByCategories: [],
-  filteredProductsByTags: [],
-  filterProductsByNameAsc: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -107,6 +105,21 @@ export const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(getAllProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(getProductsByCat.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getProductsByCat.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.productsByCat = action.payload;
+      })
+      .addCase(getProductsByCat.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
@@ -196,34 +209,7 @@ export const productSlice = createSlice({
         state.isSuccess = false;
         state.message = action.error;
       })
-      .addCase(filterProductsByCategory, (state, action) => {
-        const categoryId = action.payload;
-        const selectedCategory = state.categories.find(
-          (category) => category.id === categoryId
-        );
-        if (selectedCategory) {
-          state.filteredProductsByCategories = state.products.filter(
-            (product) => product.category === selectedCategory.title
-          );
-        } else {
-          console.log("Invalid category id");
-        }
-      })
-      .addCase(filterProductsByTags, (state, action) => {
-        const selectedTag = action.payload;
-        if (selectedTag) {
-          state.filteredProductsByTags = state.products.filter(
-            (product) => product.tags === selectedTag
-          );
-        } else {
-          console.log("Invalid tags");
-        }
-      })
-      .addCase(filterProductsByNameAsc, (state, action) => {
-        state.filteredProductsByNameAsc = [...state.products].sort((a, b) =>
-          a.title.localeCompare(b.title)
-        );
-      })
+
       .addCase(resetState, () => initialState);
   },
 });

@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -24,13 +24,16 @@ import Checkout from "./pages/Checkout";
 import Logout from "./pages/Logout";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
-import { PrivateRoutes } from "./routing/PrivateRoutes";
-import { OpenRoutes } from "./routing/OpenRoutes";
+import ScrollToTop from "./components/ScrollToTop";
+import {PrivateRoutes} from "./routing/PrivateRoutes";
+import {OpenRoutes} from "./routing/OpenRoutes";
+import OrderSuccess from "./pages/OrderSuccess";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
@@ -90,6 +93,7 @@ function App() {
               }
             />
             <Route path="logout" element={<Logout />} />
+            <Route path="success" element={<OrderSuccess />} />
             <Route path="forgot-password" element={<Forgotpassword />} />
             <Route
               path="signup"

@@ -1,38 +1,38 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import ReactStars from "react-rating-stars-component";
-import { Link, useLocation } from "react-router-dom";
-import prodcompare from "../images/prodcompare.svg";
-import wish from "../images/wish.svg";
-import addcart from "../images/add-cart.svg";
-import view from "../images/view.svg";
-import { useDispatch } from "react-redux";
+import {Link, useLocation} from "react-router-dom";
+// import prodcompare from "../assets/images/prodcompare.svg";
+// import wish from "../assets/images/wish.svg";
+// import addcart from "../assets/images/add-cart.svg";
+// import view from "../assets/images/view.svg";
+import {useDispatch} from "react-redux";
 import {
   getAllProducts,
-  addToWishlist,
-  addToCompare,
+  // addToWishlist,
+  // addToCompare,
 } from "../features/products/productSlice";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const ProductCard = (props) => {
-  const { grid, data, amount } = props;
+  const {grid, data, amount} = props;
 
   let location = useLocation();
 
   const dispatch = useDispatch();
 
-  const addProdToWish = (id) => {
-    dispatch(addToWishlist(id));
-    toast.success("Đã thêm vào danh sách yêu thích!", {
-      autoClose: 500,
-    });
-  };
+  // const addProdToWish = (id) => {
+  //   dispatch(addToWishlist(id));
+  //   toast.success("Đã thêm vào danh sách yêu thích!", {
+  //     autoClose: 500,
+  //   });
+  // };
 
-  const addProdToCompare = (id) => {
-    dispatch(addToCompare(id));
-    toast.success("Đã thêm vào so sánh!", {
-      autoClose: 500,
-    });
-  };
+  // const addProdToCompare = (id) => {
+  //   dispatch(addToCompare(id));
+  //   toast.success("Đã thêm vào so sánh!", {
+  //     autoClose: 500,
+  //   });
+  // };
 
   useEffect(() => {
     dispatch(getAllProducts());
@@ -54,19 +54,12 @@ const ProductCard = (props) => {
         <div
           key={product._id}
           className={` ${
-            location.pathname === "/product" ? `gr-${grid}` : "col-3"
+            location.pathname === "/product"
+              ? `gr-${grid}`
+              : "col-3 product-card"
           } `}
         >
-          <div className="product-card position-relative my-2">
-            <div className="wishlist-icon position-absolute z-111">
-              <button className="border-0 bg-transparent ">
-                <img
-                  src={wish}
-                  alt="wishlist"
-                  onClick={() => addProdToWish(product?._id)}
-                />
-              </button>
-            </div>
+          <div className="product-card-wrapper position-relative my-2">
             <Link to={`/product/${product._id}`}>
               <div className="product-image">
                 <img
@@ -74,11 +67,11 @@ const ProductCard = (props) => {
                   className="img-fluid"
                   alt="product-img"
                 />
-                <img
+                {/* <img
                   src={product?.images[1]?.url}
                   className="img-fluid"
                   alt="product-img"
-                />
+                /> */}
               </div>
               <div className="product-details">
                 <h6 className="brand">{product?.brand}</h6>
@@ -86,7 +79,7 @@ const ProductCard = (props) => {
                 <ReactStars
                   count={5}
                   size={24}
-                  value={product?.rating}
+                  value={5}
                   edit={false}
                   activeColor="#ffd700"
                 />
@@ -94,7 +87,7 @@ const ProductCard = (props) => {
                   className={`description ${
                     grid === 12 ? "d-block" : "d-none"
                   }`}
-                  dangerouslySetInnerHTML={{ __html: product?.description }}
+                  dangerouslySetInnerHTML={{__html: product?.description}}
                 ></p>
                 <p className="price">
                   {(product?.price).toLocaleString("vi-VN", {
@@ -104,7 +97,7 @@ const ProductCard = (props) => {
                 </p>
               </div>
             </Link>
-            <div className="action-bar position-absolute">
+            {/* <div className="action-bar position-absolute">
               <div className="d-flex flex-column gap-15">
                 <button className="border-0 bg-transparent">
                   <img
@@ -120,7 +113,10 @@ const ProductCard = (props) => {
                   <img src={addcart} alt="addcart" />
                 </button>
               </div>
-            </div>
+            </div> */}
+            <Link to={`/product/${product?._id}`} className="button">
+              Đọc thêm
+            </Link>
           </div>
         </div>
       ))}

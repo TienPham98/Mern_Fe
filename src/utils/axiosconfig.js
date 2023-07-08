@@ -3,22 +3,27 @@ import Cookies from "js-cookie";
 
 export const base_url = "http://localhost:5000/api/";
 
-const getTokenFromLocalStorage = localStorage.getItem("customer")
-  ? JSON.parse(localStorage.getItem("customer"))
+const getTokenFromsessionStorage = sessionStorage.getItem("customer")
+  ? JSON.parse(sessionStorage.getItem("customer"))
   : null;
 
 const instance = axios.create({
   baseURL: "http://localhost:5000/api/",
   headers: {
-    Authorization: `Bearer ${getTokenFromLocalStorage?.token}`,
     Accept: "application/json",
   },
+  withCredentials: true,
 });
 
-axios.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
   const token = Cookies.get("token");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
+  } else {
+    const sessionStorageToken = getTokenFromsessionStorage?.token;
+    if (sessionStorageToken) {
+      config.headers["Authorization"] = `Bearer ${sessionStorageToken}`;
+    }
   }
   return config;
 });
@@ -35,20 +40,22 @@ instance.interceptors.response.use(
       error.response.data.message === "jwt expired"
     ) {
       originalRequest._retry = true;
-      const refreshToken = getTokenFromLocalStorage?.refreshToken;
-      const response = await axios.post("/refresh_token", {
+      const refreshToken = getTokenFromsessionStorage?.refreshToken;
+      const response = await axios.post("/user/refresh_token", {
         refreshToken: refreshToken,
       });
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.accessToken);
+        sessionStorage.setItem("token", response.data.accessToken);
         instance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${response.data.accessToken}`;
         return instance(originalRequest);
       }
     }
+    if (error.response.status === 500) {
+    }
     return Promise.reject(error);
   }
 );
 
-export { instance };
+export {instance};

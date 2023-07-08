@@ -1,16 +1,17 @@
 import React from "react";
 import ReactStars from "react-rating-stars-component";
-import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { addProdToCart } from "../features/user/userSlice";
+import {useDispatch} from "react-redux";
+import {Link} from "react-router-dom";
+import {addProdToCart} from "../features/user/userSlice";
 
 const SpecialProduct = (props) => {
-  const { id, title, brand, price, quantity, images } = props;
+  const {id, title, brand, price, quantity, images} = props;
   const dispatch = useDispatch();
   const handleAddToCart = () => {
     dispatch(
       addProdToCart({
         productId: id,
+        title: title,
         images: images[0]?.url,
         quantity: 1,
         price: price,

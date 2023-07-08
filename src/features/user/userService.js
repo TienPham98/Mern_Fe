@@ -1,12 +1,12 @@
 import axios from "axios";
-import { base_url, instance } from "../../utils/axiosconfig";
+import {base_url, instance} from "../../utils/axiosconfig";
 import Cookies from "js-cookie";
 
 const register = async (userData) => {
   const response = await axios.post(`${base_url}user/register`, userData);
   if (response.data) {
     if (response.data) {
-      localStorage.setItem("customer", JSON.stringify(response.data));
+      sessionStorage.setItem("customer", JSON.stringify(response.data));
     }
     return response.data;
   }
@@ -17,7 +17,7 @@ const login = async (userData) => {
   if (response.data) {
     if (response.data) {
       const refreshToken = response.data.refreshToken;
-      localStorage.setItem("customer", JSON.stringify(response.data));
+      sessionStorage.setItem("customer", JSON.stringify(response.data));
     }
     return response.data;
   }
@@ -36,7 +36,7 @@ const forgotPasswordToken = async (data) => {
 const resetPasswordToken = async (data) => {
   const response = await axios.put(
     `${base_url}user/reset-password/${data.token}`,
-    { password: data?.password }
+    {password: data?.password}
   );
   if (response.data) {
     return response.data;
@@ -69,7 +69,6 @@ const deleteCartItem = async (cartItemId) => {
 };
 
 const updateQuantityFromCart = async (cartDetail) => {
-  console.log(cartDetail);
   const response = await instance.delete(
     `${base_url}user/update-product-cart/${cartDetail.cartItemId}/${cartDetail.quantity}`
   );
@@ -84,7 +83,6 @@ const getCart = async () => {
     if (response.data) {
       return response.data;
     }
-    console.log(response);
   } catch (error) {
     console.log(error);
   }

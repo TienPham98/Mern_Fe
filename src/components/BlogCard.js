@@ -30,7 +30,7 @@ const BlogCard = (props) => {
             <div className="blog-card-img">
               <img
                 src={blog.images[0].url}
-                className="img-fluid w-100"
+                className="img-fluid"
                 alt={blog.title}
               />
             </div>
@@ -39,7 +39,12 @@ const BlogCard = (props) => {
                 {moment(blog.createdAt).format("DD/MM/YYYY HH:mm:ss")}
               </p>
               <h5 className="title">{blog.title}</h5>
-              <p className="desc">{blog.description}</p>
+              <p
+                className="desc"
+                dangerouslySetInnerHTML={{ __html: blog?.description }}
+              >
+                {/* {blog?.description.replace(/<\/?p>/gi, "")} */}
+              </p>
               <Link to={`/blog/${blog.id}`} className="button">
                 Đọc thêm
               </Link>

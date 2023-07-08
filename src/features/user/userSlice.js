@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
-import { authService } from "./userService";
+import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
+import {toast} from "react-toastify";
+import {authService} from "./userService";
 import Cookies from "js-cookie";
 
 export const registerUser = createAsyncThunk(
@@ -49,13 +49,9 @@ export const resetPassword = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   "auth/logout",
-  async (_, { rejectWithValue }) => {
+  async (_, {rejectWithValue}) => {
     try {
       const response = await authService.logout();
-      localStorage.removeItem("customer");
-      localStorage.removeItem("userCart");
-      Cookies.remove("refreshToken");
-      Cookies.remove("token");
       return response;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -162,15 +158,15 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-const getCustomerFromLocalStorage = localStorage.getItem("customer")
-  ? JSON.parse(localStorage.getItem("customer"))
+const getCustomerFromsessionStorage = sessionStorage.getItem("customer")
+  ? JSON.parse(sessionStorage.getItem("customer"))
   : null;
 
 const initialState = {
-  user: getCustomerFromLocalStorage,
+  user: getCustomerFromsessionStorage,
   cart:
-    JSON.parse(localStorage.getItem("userCart")) ||
-    JSON.parse(localStorage.getItem("guestCart")) ||
+    JSON.parse(sessionStorage.getItem("userCart")) ||
+    JSON.parse(sessionStorage.getItem("guestCart")) ||
     [],
   cartProducts: [],
   isError: false,
@@ -216,37 +212,7 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.user = action.payload;
         Cookies.set("refreshToken", action.payload.refreshToken);
-
-        // Kết hợp giỏ hàng từ localStorage với giỏ hàng của người dùng đã đăng nhập
-        // const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
-        // guestCart.forEach((guestCartItem) => {
-        //   const foundItemIndex = state.cart.findIndex(
-        //     ({ _id }) => _id === guestCartItem._id
-        //   );
-
-        //   if (foundItemIndex !== -1) {
-        //     state.cart[foundItemIndex].quantity += guestCartItem.quantity;
-        //   } else {
-        //     state.cart.push(guestCartItem);
-        //   }
-        // });
-        // Xóa giỏ hàng khách từ localStorage
-        // localStorage.removeItem("guestCart");
-        // Khôi phục giỏ hàng của người dùng đã đăng nhập từ localStorage dựa trên ID người dùng
-        // if (action.payload && action.payload._id) {
-        //   const lastUserCart =
-        //     JSON.parse(
-        //       localStorage.getItem(`userCart_${action.payload._id}`)
-        //     ) || [];
-        //   state.cart = lastUserCart;
-        // }
-        // Lưu giỏ hàng của người dùng đã đăng nhập vào localStorage dựa trên ID người dùng
-        // if (action.payload && action.payload._id) {
-        //   localStorage.setItem(
-        //     `userCart_${action.payload._id}`,
-        //     JSON.stringify(state.cart)
-        //   );
-        // }
+        Cookies.set("token", action.payload.token);
         if (state.isSuccess === true) {
           toast.info("Đăng nhập thành công");
         }
@@ -302,19 +268,13 @@ export const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(logoutUser.fulfilled, (state) => {
-        // if (state.user && state.user._id) {
-        //   localStorage.setItem(
-        //     `userCart_${state.user._id}`,
-        //     JSON.stringify(state.cart)
-        //   );
-        // }
         state.isLoading = false;
         state.user = null;
         state.cartProducts = [];
-        // const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
-        // state.cart = guestCart;
-        localStorage.removeItem("customer");
-        // localStorage.removeItem("userCart");
+        sessionStorage.removeItem("customer");
+        sessionStorage.removeItem("userCart");
+        Cookies.remove("refreshToken");
+        Cookies.remove("token");
         toast.info("Đăng xuất thành công");
       })
       .addCase(logoutUser.rejected, (state, action) => {
@@ -462,7 +422,7 @@ export const authSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.updatedUser = action.payload;
-        let currentUserData = JSON.parse(localStorage.getItem("customer"));
+        let currentUserData = JSON.parse(sessionStorage.getItem("customer"));
         let newUserData = {
           _id: currentUserData?._id,
           token: currentUserData?.token,
@@ -471,7 +431,7 @@ export const authSlice = createSlice({
           email: action?.payload?.email,
           mobile: action?.payload?.mobile,
         };
-        localStorage.setItem("customer", JSON.stringify(newUserData));
+        sessionStorage.setItem("customer", JSON.stringify(newUserData));
         state.user = newUserData;
         toast.success("cập nhật thành công ");
       })

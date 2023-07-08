@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import BreadCrumb from "../components/BreadCrumb";
 import Container from "../components/Container";
-import { getOrders } from "../features/user/userSlice";
+import {getOrders} from "../features/user/userSlice";
 
 const Order = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const Order = () => {
               orderState?.map((item, index) => {
                 return (
                   <div
-                    style={{ backgroundColor: "#febd69" }}
+                    style={{backgroundColor: "#febd69"}}
                     className="row my-5 pt-3"
                     key={index}
                   >
@@ -70,7 +70,7 @@ const Order = () => {
                     </div>
                     <div className="col-12">
                       <div
-                        style={{ backgroundColor: "#0ECC7E" }}
+                        style={{backgroundColor: "#0ECC7E"}}
                         className="row py-3"
                       >
                         <div className="col-3">
